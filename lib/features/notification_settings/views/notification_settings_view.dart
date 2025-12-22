@@ -17,7 +17,7 @@ class NotificationSettingsView extends GetView<NotificationSettingsController> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              AppAppbar(title: 'Notification..'),
+              AppAppbar(title: 'Notification'),
               SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
