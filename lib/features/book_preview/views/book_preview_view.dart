@@ -63,7 +63,9 @@ class BookPreviewView extends GetView<BookPreviewController> {
                 padding: EdgeInsets.symmetric(horizontal: 45),
                 child: GradientElevatedButton(
                   text: 'Upload Another Photo',
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.toNamed(Routes.UPLOAD_PHOTO);
+                  },
                 ),
               ),
 

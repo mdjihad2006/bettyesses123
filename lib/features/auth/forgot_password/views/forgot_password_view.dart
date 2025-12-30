@@ -74,18 +74,36 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                           ),
 
                           SizedBox(height: 30.h),
-                          GradientElevatedButton(
-                            text: 'Done',
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                Get.toNamed(Routes.OTP_VERIFICATION);
-                              } else {
-                                Get.snackbar(
-                                  'Error',
-                                  'Please enter the valid email address',
-                                );
-                              }
-                            },
+                          Obx(
+                                () => GestureDetector(
+                              onTap: () {
+                                print("Signing up");
+                                controller.submit();
+                              },
+                              child: Container(
+                                height: 48.h,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFF6C8CFF),
+                                      Color(0xFFCE6FFF),
+                                    ],
+                                  ),
+                                ),
+                                child: Center(
+                                  child: controller.isLoading.value
+                                      ? CircularProgressIndicator()
+                                      : Text(
+                                    'Sign up',
+                                    style: CustomTextStyles.t16(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
 
                           SizedBox(height: 30.h),

@@ -1,11 +1,10 @@
 import 'package:bettyesses123/app/common/widgets/app_appbar.dart';
-import 'package:bettyesses123/app/common/widgets/custom_gradient_button.dart';
+import 'package:bettyesses123/app/common/widgets/custom_text_style.dart';
 import 'package:bettyesses123/app/common/widgets/title_and_sub.dart';
 import 'package:bettyesses123/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 
@@ -16,100 +15,145 @@ class OtpVerificationView extends GetView<OtpVerificationController> {
 
   @override
   Widget build(BuildContext context) {
-    final email = Get.arguments?['email'];
-    final formKey = GlobalKey<FormState>();
+    final controller = Get.put(OtpVerificationController());
+    final args = Get.arguments ?? {};
+    controller.userId = args['id'] ?? '';
+    controller.email = args['email'] ?? '';
+    controller.isFromForgotPassword = args['isFromForgotPassword'] ?? false;
+    print('hello${controller.isFromForgotPassword}');
+    print("my id is here${controller.userId}");
+
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
-      body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 25.w),
-        child: Column(
-          children: [
-            AppAppbar(),
-            SizedBox(height: 40.h),
-
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TitleNSub(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 25.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppAppbar(),
+              SizedBox(height: 40.h),
+              TitleNSub(
                 title: 'Confirm your verification',
                 subtitle:
-                'Please give us one time verification code sent to $email email address.',
+                    'Please enter the 6-digit verification code sent to ${controller.email} email address.',
               ),
-            ),
+              SizedBox(height: 20.h),
 
-            SizedBox(height: 15.h),
+              // OTP input
+              Pinput(
+                controller: controller.otpController,
+                length: 6,
+                showCursor: true,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                onChanged: (value) {
+                  controller.otp.value = value;
+                  controller.isOtpValid.value = true;
+                },
+                validator: (value) {
+                  if (value == null || value.length < 6) {
+                    return 'Enter a valid OTP';
+                  }
+                  return null;
+                },
+                defaultPinTheme: PinTheme(
+                  width: 55,
+                  height: 60,
+                  textStyle: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                ),
+                errorPinTheme: PinTheme(
+                  width: 55,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.red, width: 1.5),
+                  ),
+                ),
+              ),
 
-            Form(
-              key: formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Pinput(
-                    length: 6,
-                    showCursor: true,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly, // only numbers
-                    ],
-                    onCompleted: controller.verifyOtp,
+              SizedBox(height: 30.h),
 
-                    validator: (value) {
-                      if (value == null || value.length < 6) {
-                        return 'Something went wrong. Try again';
-                      }
-                      return null;
-                    },
-
-                    defaultPinTheme: PinTheme(
-                      width: 55,
-                      height: 60,
-                      textStyle: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey),
+              Obx(
+                () => GestureDetector(
+                  onTap: controller.isLoading.value
+                      ? null
+                      : controller.verifyOtp,
+                  child: Container(
+                    height: 48.h,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.r),
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF6C8CFF), Color(0xFFCE6FFF)],
                       ),
                     ),
-
-                    errorPinTheme: PinTheme(
-                      width: 55,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.red, width: 1.5),
-                      ),
+                    child: Center(
+                      child: controller.isLoading.value
+                          ? SizedBox(
+                              height: 22,
+                              width: 22,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text(
+                              'Verify OTP',
+                              style: CustomTextStyles.t16(color: Colors.white),
+                            ),
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
 
+              SizedBox(height: 20.h),
 
-            const Spacer(),
+              Obx(
+                () => Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Didn't receive OTP? ",
+                      style: TextStyle(fontSize: 14.sp),
+                    ),
+                    controller.canResend.value
+                        ? GestureDetector(
+                            onTap: controller.resendOtp,
+                            child: Text(
+                              "Resend",
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF6C8CFF),
+                              ),
+                            ),
+                          )
+                        : Text(
+                            "Resend in ${controller.secondsLeft.value}s",
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.grey,
+                            ),
+                          ),
+                  ],
+                ),
+              ),
 
-            GradientElevatedButton(
-              text: 'Verify Code',
-              onPressed: () {
-                if (formKey.currentState!.validate()) {
-                  Get.toNamed(Routes.VERIFICATION_SUCCESSFUL);
-                } else {
-                  Get.snackbar(
-                    'Invalid OTP',
-                    'Enter a valid OTP',
-                    snackPosition: SnackPosition.TOP,
-                  );
-                }
-              },
-            ),
-
-            SizedBox(height: 40.h),
-          ],
+              SizedBox(height: 50.h),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-

@@ -1,5 +1,4 @@
 import 'package:bettyesses123/app/common/widgets/app_appbar.dart';
-import 'package:bettyesses123/app/common/widgets/custom_gradient_button.dart';
 import 'package:bettyesses123/app/common/widgets/custom_text_style.dart';
 import 'package:bettyesses123/app/common/widgets/pic_text.dart';
 import 'package:bettyesses123/app/routes/app_pages.dart';
@@ -15,7 +14,6 @@ class LogInView extends GetView<LogInController> {
   const LogInView({super.key});
   @override
   Widget build(BuildContext context) {
-    final passwordController = Get.put(PasswordController());
     final controller = Get.put(LogInController());
     final _formKey = GlobalKey<FormState>();
 
@@ -73,7 +71,7 @@ class LogInView extends GetView<LogInController> {
                         () => TextFormField(
                           controller: controller.passwordController,
                           obscureText:
-                              passwordController.isPasswordHidden.value,
+                              controller.passwordVisible.value,
                           decoration: InputDecoration(
                             hintText: 'Enter your password',
                             border: OutlineInputBorder(
@@ -82,12 +80,12 @@ class LogInView extends GetView<LogInController> {
                             suffixIcon: IconButton(
                               icon: Icon(
                                 color: Colors.black54,
-                                passwordController.isPasswordHidden.value
+                                controller.passwordVisible.value
                                     ? Icons.visibility_off
                                     : Icons.visibility,
                               ),
                               onPressed: () {
-                                passwordController.togglePasswordVisibility();
+                                controller.togglePasswordVisibility();
                               },
                             ),
                           ),
@@ -118,12 +116,36 @@ class LogInView extends GetView<LogInController> {
                         ],
                       ),
                       SizedBox(height: 14.h),
-                      GradientElevatedButton(
-                        text: "Login",
-                        onPressed: () {
-                          controller.selectOption('email');
-                          Get.toNamed(Routes.OTP_VERIFICATION);
-                        },
+                      Obx(
+                            () => GestureDetector(
+                          onTap: () {
+                            print("Signing in");
+                            controller.loginWithEmail();
+                          },
+                          child: Container(
+                            height: 48.h,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.r),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFF6C8CFF),
+                                  Color(0xFFCE6FFF),
+                                ],
+                              ),
+                            ),
+                            child: Center(
+                              child: controller.isLoading.value
+                                  ? CircularProgressIndicator()
+                                  : Text(
+                                'Sign In',
+                                style: CustomTextStyles.t16(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                       SizedBox(height: 20.h),
                       Center(

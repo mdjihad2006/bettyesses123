@@ -27,7 +27,7 @@ class VerificationSuccessfulView
              mainAxisAlignment: MainAxisAlignment.center,
              crossAxisAlignment: CrossAxisAlignment.center,
              children: [
-               Image.asset(AppImages.logo,height: 120,width: 130,fit: BoxFit.contain,),
+               Image.asset(AppImages.newImage,height: 160,width: 160,fit: BoxFit.cover,),
                SizedBox(height: 22.h),
                Image.asset(AppImages.right,height: 100,width: 100,fit: BoxFit.contain,),
                SizedBox(height: 22.h),

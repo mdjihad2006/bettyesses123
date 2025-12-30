@@ -68,7 +68,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static final INITIAL = Routes.BottomNavBar;
+  static final INITIAL = Routes.SPLASH_SCREEN;
 
   static final routes = [
     GetPage(

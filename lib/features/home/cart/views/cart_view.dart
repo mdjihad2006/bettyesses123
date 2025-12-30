@@ -1,6 +1,7 @@
 import 'package:bettyesses123/app/common/images/app_images.dart';
 import 'package:bettyesses123/app/common/widgets/custom_gradient_button.dart';
 import 'package:bettyesses123/app/common/widgets/custom_outline_button.dart';
+import 'package:bettyesses123/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -34,7 +35,9 @@ class CartView extends GetView<CartController> {
                   Stack(
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.toNamed(Routes.NOTIFICATION);
+                        },
                         icon: const Icon(Icons.notifications_none, size: 33),
                       ),
                       Positioned(

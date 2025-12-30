@@ -13,17 +13,14 @@ class SplashScreenView extends GetView<SplashScreenController> {
     Future.delayed(const Duration(seconds: 3), () {
       Get.offAllNamed(Routes.LOG_IN);
     });
+
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Center(
-              child: Image.asset(AppImages.splash)
-            ),
-            const SizedBox(height: 20),
-            Center(
-                child: Image.asset(AppImages.logo)
+              child: Image.asset(AppImages.newImage)
             ),
           ],
         ),

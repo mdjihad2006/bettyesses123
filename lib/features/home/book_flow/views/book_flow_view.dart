@@ -1,4 +1,3 @@
-import 'package:bettyesses123/app/common/widgets/app_appbar.dart';
 import 'package:bettyesses123/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -40,7 +39,9 @@ class BookFlowView extends GetView<BookFlowController> {
                   Stack(
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.toNamed(Routes.NOTIFICATION);
+                        },
                         icon: const Icon(Icons.notifications_none,size: 33,),
                       ),
                       Positioned(
@@ -87,6 +88,7 @@ class BookFlowView extends GetView<BookFlowController> {
 
               SizedBox(height: 10.h),
 
+
               Row(
                 children: [
                   Text(
@@ -102,6 +104,7 @@ class BookFlowView extends GetView<BookFlowController> {
                           color: Colors.blueAccent, fontSize: 15.sp),))
                 ],
               ),
+
 
               GridView.builder(
                 padding: EdgeInsets.only(top: 15.h),

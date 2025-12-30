@@ -22,4 +22,5 @@ class AppImages {
   static const String giftBox = 'assets/images/gift_box.png';
   static const String truck = 'assets/images/truck.png';
   static const String parsel = 'assets/images/parsel.png';
+  static const String newImage = 'assets/images/jewe_image.png';
 }

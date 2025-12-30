@@ -1,4 +1,3 @@
-import 'package:bettyesses123/app/common/images/app_images.dart';
 import 'package:bettyesses123/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -73,8 +72,8 @@ class HomeView extends GetView<HomeController> {
               SearchBar(
                 hintText: 'Search',
                 elevation: WidgetStateProperty.all(0),
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-                shape: MaterialStateProperty.all(
+                backgroundColor: WidgetStateProperty.all(Colors.white),
+                shape: WidgetStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

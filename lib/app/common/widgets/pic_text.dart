@@ -16,10 +16,10 @@ class PicText extends StatelessWidget {
       children: [
         SizedBox(height: 17.h),
         Image.asset(
-          AppImages.logo,
+          AppImages.newImage,
           height: 140.h,
           width: 140.w,
-          fit: BoxFit.contain,
+          fit: BoxFit.cover,
         ),
         SizedBox(height: 15.h),
         Text(

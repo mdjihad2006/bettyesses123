@@ -12,7 +12,6 @@ abstract class Routes {
   static const BOOK_FLOW = _Paths.BOOK_FLOW;
   static const CART = _Paths.CART;
   static const MENU = _Paths.MENU;
-  static const SPLASH = _Paths.SPLASH;
   static const SPLASH_SCREEN = _Paths.SPLASH_SCREEN;
   static const BOOK_DETAILS = _Paths.BOOK_DETAILS;
   static const PERSONALIZE_BOOK = _Paths.PERSONALIZE_BOOK;
@@ -48,7 +47,6 @@ abstract class _Paths {
   static const BOOK_FLOW = '/book-flow';
   static const CART = '/cart';
   static const MENU = '/menu';
-  static const SPLASH = '/splash';
   static const SPLASH_SCREEN = '/splash-screen';
   static const BOOK_DETAILS = '/book-details';
   static const PERSONALIZE_BOOK = '/personalize-book';
