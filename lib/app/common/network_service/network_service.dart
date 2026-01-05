@@ -11,6 +11,7 @@ class NetworkResponse {
   final Map<String, dynamic>? responseData;
   final bool isSuccess;
   final String errorMessage;
+
   NetworkResponse({
     required this.statusCode,
     required this.isSuccess,
@@ -22,28 +23,31 @@ class NetworkResponse {
 class NetworkCaller {
   final Logger _logger = Logger();
 
+  /// 🔐 Common Header Builder
+  Future<Map<String, String>> _authHeaders({bool isJson = true}) async {
+    final token = await SharedPreferencesHelper.getAccessToken() ?? '';
+    return {
+      if (isJson) 'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+  }
+
   Future<NetworkResponse> getRequest({required String url}) async {
-    _logger.i('AccessToken: ${SharedPreferencesHelper.getAccessToken()}');
     try {
       Uri uri = Uri.parse(url);
-      Map<String, String> headers = {
-        'Authorization': await SharedPreferencesHelper.getAccessToken() ?? '',
-      };
+      final headers = await _authHeaders(isJson: false);
+
       _logRequest(url, headers);
       Response response = await get(uri, headers: headers);
       _logResponse(url, response);
+
       final decodeResponse = jsonDecode(response.body);
+
       if (response.statusCode == 200) {
         return NetworkResponse(
-          statusCode: response.statusCode,
+          statusCode: 200,
           isSuccess: true,
           responseData: decodeResponse,
-        );
-      } else if (response.statusCode == 401) {
-        return NetworkResponse(
-          statusCode: response.statusCode,
-          isSuccess: false,
-          errorMessage: decodeResponse['message'],
         );
       } else {
         return NetworkResponse(
@@ -64,47 +68,32 @@ class NetworkCaller {
     try {
       if (kDebugMode) {
         debugPrint(
-          'Token at home_deviation_initiation_controller => ${await SharedPreferencesHelper.getAccessToken()}',
+          'TOKEN => ${await SharedPreferencesHelper.getAccessToken()}',
         );
-        debugPrint('Body is network, ${body}');
+        debugPrint('BODY => $body');
       }
+
       Uri uri = Uri.parse(url);
-      Map<String, String> headers = {
-        'content-type': 'application/json',
-        'Authorization': await SharedPreferencesHelper.getAccessToken() ?? '',
-      };
+      final headers = await _authHeaders();
+
       _logRequest(url, headers, requestBody: body);
       Response response = await post(
         uri,
         headers: headers,
         body: jsonEncode(body),
       );
-      _logger.i('Reseponse decoded: ${response.body}');
+
+      _logResponse(url, response);
       final decodeData = jsonDecode(response.body);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         return NetworkResponse(
           statusCode: response.statusCode,
           isSuccess: true,
           responseData: decodeData,
         );
-      } else if (response.statusCode == 401) {
-        return NetworkResponse(
-          statusCode: response.statusCode,
-          isSuccess: false,
-          errorMessage: decodeData['message'],
-        );
-      } else if (response.statusCode == 400) {
-
-
-
-        showSnackBar(false, decodeData['message']);
-        return NetworkResponse(
-          statusCode: response.statusCode,
-          isSuccess: false,
-          errorMessage: decodeData['message'],
-        );
       } else {
-        // showSnackBar(false, decodeData['message']);
+        showSnackBar(false, decodeData['message']);
         return NetworkResponse(
           statusCode: response.statusCode,
           isSuccess: false,
@@ -126,35 +115,23 @@ class NetworkCaller {
   }) async {
     try {
       Uri uri = Uri.parse(url);
-      Map<String, String> headers = {
-        'content-type': 'application/json',
-        'Authorization': await SharedPreferencesHelper.getAccessToken() ?? '',
-      };
+      final headers = await _authHeaders();
+
       _logRequest(url, headers);
       Response response = await put(
         uri,
         headers: headers,
         body: jsonEncode(body),
       );
+
       _logResponse(url, response);
-      if (response.statusCode == 200) {
-        final decodeData = jsonDecode(response.body);
-        return NetworkResponse(
-          statusCode: response.statusCode,
-          isSuccess: true,
-          responseData: decodeData,
-        );
-      } else if (response.statusCode == 401) {
-        return NetworkResponse(
-          statusCode: response.statusCode,
-          isSuccess: false,
-        );
-      } else {
-        return NetworkResponse(
-          statusCode: response.statusCode,
-          isSuccess: false,
-        );
-      }
+      final decodeData = jsonDecode(response.body);
+
+      return NetworkResponse(
+        statusCode: response.statusCode,
+        isSuccess: response.statusCode == 200,
+        responseData: decodeData,
+      );
     } catch (e) {
       return NetworkResponse(
         statusCode: -1,
@@ -170,29 +147,16 @@ class NetworkCaller {
   }) async {
     try {
       Uri uri = Uri.parse(url);
-      Map<String, String> headers = {
-        'Content-Type': 'application/json',
-        'Authorization':
-            'Bearer ${await SharedPreferencesHelper.getAccessToken() ?? ''}',
-      };
+      final headers = await _authHeaders();
 
-      _logger.i(headers);
       _logRequest(url, headers);
+      Response response = await patch(
+        uri,
+        headers: headers,
+        body: jsonEncode(body),
+      );
 
-      Response response;
-      if (body != null) {
-        response = await patch(
-          uri,
-          headers: headers,
-          body: jsonEncode(body), // ensures valid JSON
-        );
-      } else {
-        response = await patch(uri, headers: headers);
-      }
-
-      _logger.i("Patch response: ${response.body}");
       _logResponse(url, response);
-
       final decodeData = jsonDecode(response.body);
 
       return NetworkResponse(
@@ -215,23 +179,16 @@ class NetworkCaller {
   }) async {
     try {
       Uri uri = Uri.parse(url);
-      Map<String, String> headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': await SharedPreferencesHelper.getAccessToken() ?? '',
-      };
+      final headers = await _authHeaders();
 
       _logRequest(url, headers, requestBody: body);
-
-      Response response;
-      if (body != null) {
-        response = await delete(uri, headers: headers, body: jsonEncode(body));
-      } else {
-        response = await delete(uri, headers: headers);
-      }
+      Response response = await delete(
+        uri,
+        headers: headers,
+        body: body != null ? jsonEncode(body) : null,
+      );
 
       _logResponse(url, response);
-
       final decodeData = jsonDecode(response.body);
 
       return NetworkResponse(
@@ -254,12 +211,12 @@ class NetworkCaller {
     Map<String, dynamic> headers, {
     Map<String, dynamic>? requestBody,
   }) {
-    _logger.i('URl => $url\nHeaders => $headers\nRequest Body => $requestBody');
+    _logger.i('URL => $url\nHeaders => $headers\nRequest Body => $requestBody');
   }
 
   void _logResponse(String url, Response response) {
     _logger.i(
-      'Url => $url\nStatus Code => ${response.statusCode}\nHeaders => ${response.headers}\nBody => ${response.body}',
+      'URL => $url\nStatus => ${response.statusCode}\nBody => ${response.body}',
     );
   }
 }

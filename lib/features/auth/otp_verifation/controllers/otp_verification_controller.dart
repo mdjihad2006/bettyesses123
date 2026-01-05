@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bettyesses123/app/common/network_service/network_service.dart';
+import 'package:bettyesses123/app/common/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:bettyesses123/app/common/urls/app_urls.dart';
 import 'package:bettyesses123/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class OtpVerificationController extends GetxController {
   final otpController = TextEditingController();
   String userId = '';
   String email = '';
-  bool isFromForgotPassword = false;
+  String? isFromForgotPassword;
 
   final _networkCaller = NetworkCaller();
 
@@ -27,7 +28,7 @@ class OtpVerificationController extends GetxController {
     final args = Get.arguments ?? {};
     userId = args['id'] ?? '';
     email = args['email'] ?? '';
-    isFromForgotPassword = args['isFromForgotPassword'] ?? false;
+    isFromForgotPassword = args['isFromForgotPassword'] ?? "";
     print('hello${isFromForgotPassword}');
 
     startResendTimer();
@@ -50,17 +51,35 @@ class OtpVerificationController extends GetxController {
     isLoading.value = true;
 
     try {
+      String url;
+      if (isFromForgotPassword == "LOGIN") {
+        url = AppUrls.verifyOtp;
+      } else if (isFromForgotPassword == "SIGNUP") {
+        url = AppUrls.verifyOtp;
+      } else {
+        url = AppUrls.forgotVerifyOtp;
+      }
       final response = await _networkCaller.postRequest(
-        url: isFromForgotPassword ? AppUrls.forgotVerifyOtp : AppUrls.verifyOtp,
+        url: url,
         body: {'userId': userId, 'otpCode': otp.value},
       );
 
       if (response.isSuccess) {
         // OTP verified
-        if (isFromForgotPassword == true) {
-          Get.offNamed(Routes.CHANGE_PASSWORD, arguments: {'email': userId});
+        if (isFromForgotPassword == "LOGIN") {
+          final data = response.responseData;
+          Get.toNamed(Routes.BottomNavBar);
+          await SharedPreferencesHelper.saveAccessToken(
+            data?['data']['accessToken'],
+          );
+        } else if (isFromForgotPassword == "SIGNUP") {
+          final data = response.responseData;
+          Get.toNamed(Routes.BottomNavBar);
+          await SharedPreferencesHelper.saveAccessToken(
+            data?['data']['accessToken'],
+          );
         } else {
-          Get.offNamed(Routes.LOG_IN);
+          Get.offNamed(Routes.CHANGE_PASSWORD, arguments: {'email': userId});
         }
         clearOtp();
       } else {
@@ -86,9 +105,7 @@ class OtpVerificationController extends GetxController {
 
       final response = await _networkCaller.postRequest(
         url: AppUrls.resendOtp,
-        body: {
-          'userId': userId,
-        },
+        body: {'userId': userId},
       );
 
       if (response.isSuccess) {

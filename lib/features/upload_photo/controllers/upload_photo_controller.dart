@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 
 class UploadPhotoController extends GetxController {
-  //TODO: Implement UploadPhotoController
 
   final count = 0.obs;
+
   @override
   void onInit() {
     super.onInit();

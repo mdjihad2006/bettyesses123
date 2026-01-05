@@ -128,7 +128,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.BOOK_DETAILS,
-      page: () => const BookDetailsView(),
+      page: () => BookDetailsView(),
       binding: BookDetailsBinding(),
     ),
     GetPage(

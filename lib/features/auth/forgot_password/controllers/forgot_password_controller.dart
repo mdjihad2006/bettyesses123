@@ -41,7 +41,7 @@ class ForgotPasswordController extends GetxController {
           Routes.OTP_VERIFICATION,
           arguments: {
             'id':userId,
-            'isFromForgotPassword': true,
+            'isFromForgotPassword': "FORGET",
           },
         );
       }

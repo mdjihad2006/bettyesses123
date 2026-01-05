@@ -23,4 +23,5 @@ class AppImages {
   static const String truck = 'assets/images/truck.png';
   static const String parsel = 'assets/images/parsel.png';
   static const String newImage = 'assets/images/jewe_image.png';
+  static const String googleIcon = 'assets/images/google_icon.png';
 }

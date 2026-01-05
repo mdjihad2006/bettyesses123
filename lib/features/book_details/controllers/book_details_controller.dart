@@ -1,12 +1,14 @@
+import 'package:bettyesses123/features/home/home/model/home_model.dart';
 import 'package:get/get.dart';
 
 class BookDetailsController extends GetxController {
-  //TODO: Implement BookDetailsController
+   BookTemplate? book;
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
+    book = Get.arguments as BookTemplate;
+    print('Book title: ${book?.title}');
   }
 
   @override
@@ -18,6 +20,4 @@ class BookDetailsController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

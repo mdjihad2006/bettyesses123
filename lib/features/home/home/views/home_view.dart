@@ -1,4 +1,5 @@
 import 'package:bettyesses123/app/routes/app_pages.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -11,7 +12,7 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(HomeController());
+
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
       body: Padding(
@@ -92,81 +93,88 @@ class HomeView extends GetView<HomeController> {
 
               SizedBox(
                 height: 300.h,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.recentImages.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: GestureDetector(
-                        onTap: () {
-                          Get.toNamed(Routes.BOOK_DETAILS);
-                        },
-                        child: Container(
-                          width: 155.w,
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(12),
-                                  topRight: Radius.circular(12),
-                                  bottomLeft: Radius.circular(12),
-                                  bottomRight: Radius.circular(12),
+                child: Obx(() {
+                  final data = controller.bookTemplateResponse.value?.data;
+
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: data?.length ?? 0,
+                    itemBuilder: (context, index) {
+
+                      final books = data?[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.toNamed(Routes.BOOK_DETAILS);
+                          },
+                          child: Container(
+                            width: 155.w,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(12),
+                                    topRight: Radius.circular(12),
+                                    bottomLeft: Radius.circular(12),
+                                    bottomRight: Radius.circular(12),
+                                  ),
+                                  child: Image.asset(
+                                    controller.recentImages[index],
+                                    width: 170.w,
+                                    height: 190.h,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                                child: Image.asset(
-                                  controller.recentImages[index],
-                                  width: 170.w,
-                                  height: 190.h,
-                                  fit: BoxFit.cover,
+                                Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        books?.title ?? 'Not found',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 17.sp,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4.h),
+                                      Text(
+                                        books?.description ?? 'Not found',
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4.h),
+                                      Text(
+                                        books?.ageRange ?? 'Not found',
+                                        style: TextStyle(
+                                          fontSize: 15.sp,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Tiny Tales of Afiya',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 17.sp,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4.h),
-                                    Text(
-                                      'Learn numbers through colorful stories',
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 14.sp,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4.h),
-                                    Text(
-                                      'Age: 2-4',
-                                      style: TextStyle(
-                                        fontSize: 15.sp,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
+                      );
+                    },
+                  );
+                }),
               ),
 
               SizedBox(height: 25.h),
@@ -183,99 +191,136 @@ class HomeView extends GetView<HomeController> {
                   Spacer(),
                   TextButton(
                     onPressed: () {
-                      Get.toNamed(Routes.BOOK_FLOW);
+                      final books = controller.bookTemplateResponse.value?.data;
+                      if (books != null && books.isNotEmpty) {
+                        Get.toNamed(
+                          Routes.BOOK_FLOW,
+                          arguments: {"data": books},
+                        );
+                      } else {
+                        Get.snackbar('Error', 'Books not loaded yet');
+                      }
                     },
-                    child: Text(
-                      'View All',
-                      style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontSize: 15.sp,
-                      ),
-                    ),
+                    child: Text('View All',style: TextStyle(color: Colors.blue),),
                   ),
+
                 ],
               ),
 
-              GridView.builder(
-                padding: EdgeInsets.only(top: 15.h),
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.5,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 0.6,
-                ),
-                itemCount: controller.allImages.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Get.toNamed(Routes.BOOK_DETAILS);
-                    },
-                    child: Container(
-                      width: 165.w,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(12),
-                              topRight: Radius.circular(12),
-                              bottomLeft: Radius.circular(12),
-                              bottomRight: Radius.circular(12),
-                            ),
-                            child: Image.asset(
-                              controller.allImages[index],
-                              width: 170.w,
-                              height: 190.h,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Tiny Tales of Afiya',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                SizedBox(height: 4.h),
-                                Text(
-                                  'Learn numbers through colorful stories',
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
+              Obx(() {
+                final data = controller.bookTemplateResponse.value?.data;
+                return GridView.builder(
+                  padding: EdgeInsets.only(top: 15.h),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.5,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 0.6,
+                  ),
+                  itemCount: data?.length??0,
+                  itemBuilder: (context, index) {
+
+                    final books = data?[index];
+
+                    return GestureDetector(
+                      onTap: () {
+                        final book = books;
+
+                        if (book != null) {
+                          Get.toNamed(
+                            Routes.BOOK_DETAILS,
+                            arguments: book,
+                          );
+                        }
+                      },
+
+                      child: Container(
+                        width: 165.w,
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: CachedNetworkImage(
+                                imageUrl: books?.coverImage ?? '',
+                                width: 170.w,
+                                height: 190.h,
+                                fit: BoxFit.cover,
+
+                                placeholder: (context, url) => Container(
+                                  width: 170.w,
+                                  height: 190.h,
+                                  alignment: Alignment.center,
+                                  color: Colors.grey.shade200,
+                                  child:  const Icon(
+                                    Icons.image_not_supported_outlined,
+                                    size: 40,
                                     color: Colors.grey,
                                   ),
                                 ),
-                                SizedBox(height: 4.h),
-                                Text(
-                                  'Age: 2-4',
-                                  style: TextStyle(
-                                    fontSize: 15.sp,
-                                    color: Colors.black87,
+
+                                errorWidget: (context, url, error) => Container(
+                                  width: 170.w,
+                                  height: 190.h,
+                                  alignment: Alignment.center,
+                                  color: Colors.grey.shade200,
+                                  child: const Icon(
+                                    Icons.image_not_supported_outlined,
+                                    size: 40,
+                                    color: Colors.grey,
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ],
+
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    books?.title??'',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    books?.description??'',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    books?.ageRange??'',
+                                    style: TextStyle(
+                                      fontSize: 15.sp,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                );
+              }),
             ],
           ),
         ),

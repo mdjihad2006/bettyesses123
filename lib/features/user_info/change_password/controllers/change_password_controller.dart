@@ -67,7 +67,7 @@ class ChangePasswordController extends GetxController {
   }
 
   Future<void> savePassword() async {
-    // if (!validate()) return;
+    if (!validate()) return;
 
     isLoading.value = true;
 
@@ -91,7 +91,7 @@ class ChangePasswordController extends GetxController {
         );
       }
     } catch (e) {
-      print('else else');
+      print('catch');
       Get.snackbar('Error', 'Something went wrong');
     } finally {
       print('else');

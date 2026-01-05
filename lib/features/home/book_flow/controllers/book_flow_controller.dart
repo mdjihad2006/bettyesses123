@@ -1,12 +1,21 @@
+import 'package:bettyesses123/features/home/home/model/home_model.dart';
 import 'package:get/get.dart';
 
 class BookFlowController extends GetxController {
-  //TODO: Implement BookFlowController
+  List<BookTemplate>? data;
 
-  final count = 0.obs;
+  void setData(List<BookTemplate> newData) {
+    data = newData;
+    update();
+  }
+
   @override
   void onInit() {
     super.onInit();
+    final args = Get.arguments;
+    if (args != null && args is Map<String, dynamic>) {
+      data = args['data'] as List<BookTemplate>?;
+    }
   }
 
   @override
@@ -18,8 +27,6 @@ class BookFlowController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 
   final List<String> allImages = [
     'assets/images/book_image.png',

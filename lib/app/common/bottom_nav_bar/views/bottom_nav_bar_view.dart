@@ -1,5 +1,7 @@
+import 'package:bettyesses123/features/home/book_flow/controllers/book_flow_controller.dart';
 import 'package:bettyesses123/features/home/book_flow/views/book_flow_view.dart';
 import 'package:bettyesses123/features/home/cart/views/cart_view.dart';
+import 'package:bettyesses123/features/home/home/controllers/home_controller.dart';
 import 'package:bettyesses123/features/home/home/views/home_view.dart';
 import 'package:bettyesses123/features/home/menu/views/menu_view.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import '../controllers/bottom_nav_bar_controller.dart';
 
 class BottomnavbarView extends GetView<BottomnavbarController> {
   BottomnavbarView({super.key});
+
 
   final List<String> icons = [
     AppImages.homeIcon,
@@ -28,6 +31,7 @@ class BottomnavbarView extends GetView<BottomnavbarController> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Obx(() => pages[controller.selectedIndex.value]),
 
@@ -57,13 +61,23 @@ class BottomnavbarView extends GetView<BottomnavbarController> {
               return GestureDetector(
                 onTap: () {
                   controller.changeIndex(index, maxLength: icons.length);
-                  debugPrint("selected Index ${controller.selectedIndex}");
+
+                  if (index == 1) {
+                    final homeController = Get.find<HomeController>();
+                    final data = homeController.bookTemplateResponse.value?.data;
+
+                    if (data != null && data.isNotEmpty) {
+                      final bookController = Get.put(BookFlowController());
+                      bookController.setData(data);
+                    }
+                  }
                 },
+
 
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Animated icon container
+
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 600),
                       curve: Curves.linear,

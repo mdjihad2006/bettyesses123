@@ -1,4 +1,5 @@
 import 'package:bettyesses123/app/common/network_service/network_service.dart';
+import 'package:bettyesses123/app/common/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:bettyesses123/app/common/urls/app_urls.dart';
 import 'package:bettyesses123/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class LogInController extends GetxController {
 
   final emailError = RxnString();
   final passwordError = RxnString();
+  RxBool isGoogleLoading = false.obs;
 
   void togglePasswordVisibility() {
     passwordVisible.value = !passwordVisible.value;
@@ -63,8 +65,10 @@ class LogInController extends GetxController {
           }
       );
       if(response.isSuccess){
+        final data = response.responseData;
+        await SharedPreferencesHelper.saveAccessToken(data?['data']['accessToken']);
         isLoading.value = false;
-        Get.toNamed(Routes.BottomNavBar);
+        Get.toNamed(Routes.BottomNavBar,  arguments: {"email":emailController.text,"isFromForgotPassword":"LOGIN"});
       }
     }catch(e){
       isLoading.value = false;
@@ -73,9 +77,16 @@ class LogInController extends GetxController {
     }
   }
 
-  void loginWithGoogle() {
-    Get.toNamed(Routes.BottomNavBar);
+  Future<void> loginWithGoogle(String token) async {
+    final response = await _networkCaller.postRequest(
+      url: AppUrls.signInWithGoogle,
+      body: {"googleToken": token},
+    );
+    if (response.isSuccess) {
+      print('success');
+    }
   }
+
 
   void clearFields(){
     emailController.clear();
@@ -108,7 +119,6 @@ class LogInController extends GetxController {
   }
 
   RxString selectedOption = ''.obs;
-
 
   void selectOption(String option) {
     selectedOption.value = option;

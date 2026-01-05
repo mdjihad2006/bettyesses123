@@ -110,7 +110,7 @@ class SignUpController extends GetxController {
         Get.toNamed(Routes.OTP_VERIFICATION,arguments: {
           "id":userId,
           "email":emailController.text,
-          "isFromForgotPassword":false,
+          "isFromForgotPassword":"SIGNUP",
         });
         clearFields();
       } else{

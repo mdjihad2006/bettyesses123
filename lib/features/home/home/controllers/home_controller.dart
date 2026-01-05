@@ -1,17 +1,16 @@
+import 'package:bettyesses123/app/common/network_service/network_service.dart';
+import 'package:bettyesses123/app/common/urls/app_urls.dart';
+import 'package:bettyesses123/features/home/home/model/home_model.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
+  final networkCaller = NetworkCaller();
+  final bookTemplateResponse = Rxn<BookTemplateResponse>();
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
+    _allBookTemp();
   }
 
   @override
@@ -19,7 +18,17 @@ class HomeController extends GetxController {
     super.onClose();
   }
 
-  void increment() => count.value++;
+  Future<void> _allBookTemp() async {
+    final response = await networkCaller.getRequest(
+      url: AppUrls.getAllBookTemp,
+    );
+
+    if (response.isSuccess) {
+      bookTemplateResponse.value = BookTemplateResponse.fromJson(
+        response.responseData!,
+      );
+    }
+  }
 
   final List<String> allImages = [
     'assets/images/book_image.png',

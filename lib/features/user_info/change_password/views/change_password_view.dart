@@ -108,7 +108,7 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
                                   ),
                                   onPressed: () {
                                     controller
-                                        .togglePasswordVisibility(); // fixed here
+                                        .togglePasswordVisibility();
                                   },
                                 ),
                               ),

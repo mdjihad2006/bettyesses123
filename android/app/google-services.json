@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "2815476514",
+    "project_id": "betysses",
+    "storage_bucket": "betysses.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2815476514:android:a3c6e988641e3dcaab1b7b",
+        "android_client_info": {
+          "package_name": "com.example.bettyesses123"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaPplybdDO1B0A1gorS9DcDFczbA9Djdo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

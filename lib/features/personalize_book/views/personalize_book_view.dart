@@ -2,7 +2,6 @@ import 'package:bettyesses123/app/common/widgets/app_appbar.dart';
 import 'package:bettyesses123/app/common/widgets/custom_gradient_button.dart';
 import 'package:bettyesses123/app/common/widgets/custom_outline_button.dart';
 import 'package:bettyesses123/app/common/widgets/custom_text_style.dart';
-import 'package:bettyesses123/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -16,7 +15,6 @@ class PersonalizeBookView extends GetView<PersonalizeBookController> {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    String? selectedAddressType;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
@@ -46,7 +44,7 @@ class PersonalizeBookView extends GetView<PersonalizeBookController> {
                     SizedBox(height: 7.h),
 
                     TextFormField(
-                      controller: controller.cityController,
+                      controller: controller.nameController,
                       decoration: InputDecoration(
                         hintText: 'Name',
                         border: OutlineInputBorder(
@@ -76,7 +74,7 @@ class PersonalizeBookView extends GetView<PersonalizeBookController> {
                         SizedBox(height: 7.h),
 
                         DropdownButtonFormField<String>(
-                          value: selectedAddressType,
+                          value: controller.selectedAge?.toString(), // int কে string এ convert
                           hint: const Text('Select age'),
                           icon: const Icon(Icons.keyboard_arrow_down),
                           decoration: InputDecoration(
@@ -89,49 +87,24 @@ class PersonalizeBookView extends GetView<PersonalizeBookController> {
                             ),
                           ),
                           items: const [
-                            DropdownMenuItem(
-                              value: '5 year',
-                              child: Text('5 year'),
-                            ),
-                            DropdownMenuItem(
-                              value: '6 year',
-                              child: Text('6 year'),
-                            ),
-                            DropdownMenuItem(
-                              value: '7 year',
-                              child: Text('7 year'),
-                            ),
-                            DropdownMenuItem(
-                              value: '8 year',
-                              child: Text('8 year'),
-                            ),
-                            DropdownMenuItem(
-                              value: '9 year',
-                              child: Text('9 year'),
-                            ),
-                            DropdownMenuItem(
-                              value: '10 year',
-                              child: Text('10 year'),
-                            ),
-                            DropdownMenuItem(
-                              value: '11 year',
-                              child: Text('11 year'),
-                            ),
-                            DropdownMenuItem(
-                              value: '12 year',
-                              child: Text('12 year'),
-                            ),
+                            DropdownMenuItem(value: '5', child: Text('5 year')),
+                            DropdownMenuItem(value: '6', child: Text('6 year')),
+                            DropdownMenuItem(value: '7', child: Text('7 year')),
+                            DropdownMenuItem(value: '8', child: Text('8 year')),
+                            DropdownMenuItem(value: '9', child: Text('9 year')),
+                            DropdownMenuItem(value: '10', child: Text('10 year')),
+                            DropdownMenuItem(value: '11', child: Text('11 year')),
+                            DropdownMenuItem(value: '12', child: Text('12 year')),
                           ],
                           onChanged: (value) {
-                            selectedAddressType = value;
+                            controller.selectedAge = int.tryParse(value ?? '0');
                           },
                           validator: (value) {
-                            if (value == null) {
-                              return 'Please select address type';
-                            }
+                            if (value == null) return 'Please select age';
                             return null;
                           },
                         ),
+
                       ],
                     ),
 
@@ -230,7 +203,7 @@ class PersonalizeBookView extends GetView<PersonalizeBookController> {
                             text: "Go To Next Step",
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                Get.toNamed(Routes.UPLOAD_PHOTO);
+                                controller.postDetails();
                               }
                             },
                           ),

@@ -1,4 +1,6 @@
 import 'package:bettyesses123/app/routes/app_pages.dart';
+import 'package:bettyesses123/features/home/home/controllers/home_controller.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -11,6 +13,7 @@ class BookFlowView extends GetView<BookFlowController> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(BookFlowController());
+
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
       body: Padding(
@@ -99,9 +102,6 @@ class BookFlowView extends GetView<BookFlowController> {
                     ),
                   ),
                   Spacer(),
-                  TextButton(onPressed: () {},
-                      child: Text('View All', style: TextStyle(
-                          color: Colors.blueAccent, fontSize: 15.sp),))
                 ],
               ),
 
@@ -116,11 +116,12 @@ class BookFlowView extends GetView<BookFlowController> {
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 0.6,
                 ),
-                itemCount: controller.allImages.length,
+                itemCount: controller.data?.length,
                 itemBuilder: (context, index) {
+                  final books = controller.data?[index];
                   return GestureDetector(
                     onTap: () {
-                      Get.toNamed(Routes.BOOK_DETAILS);
+                      Get.toNamed(Routes.BOOK_DETAILS,  arguments: books);
                     },
                     child: Container(
                       width: 165.w,
@@ -132,17 +133,36 @@ class BookFlowView extends GetView<BookFlowController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(12),
-                              topRight: Radius.circular(12),
-                              bottomLeft: Radius.circular(12),
-                              bottomRight: Radius.circular(12),
-                            ),
-                            child: Image.asset(
-                              controller.allImages[index],
+                            borderRadius: BorderRadius.circular(12),
+                            child: CachedNetworkImage(
+                              imageUrl: books?.coverImage ?? '',
                               width: 170.w,
                               height: 190.h,
                               fit: BoxFit.cover,
+
+                              placeholder: (context, url) => Container(
+                                width: 170.w,
+                                height: 190.h,
+                                alignment: Alignment.center,
+                                color: Colors.grey.shade200,
+                                child:  const Icon(
+                                  Icons.image_not_supported_outlined,
+                                  size: 40,
+                                  color: Colors.grey,
+                                ),
+                              ),
+
+                              errorWidget: (context, url, error) => Container(
+                                width: 170.w,
+                                height: 190.h,
+                                alignment: Alignment.center,
+                                color: Colors.grey.shade200,
+                                child: const Icon(
+                                  Icons.image_not_supported_outlined,
+                                  size: 40,
+                                  color: Colors.grey,
+                                ),
+                              ),
                             ),
                           ),
                           Padding(
@@ -152,7 +172,7 @@ class BookFlowView extends GetView<BookFlowController> {
                               CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Tiny Tales of Afiya',
+                                  books?.title??'',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -162,7 +182,7 @@ class BookFlowView extends GetView<BookFlowController> {
                                 ),
                                 SizedBox(height: 4.h),
                                 Text(
-                                  'Learn numbers through colorful stories',
+                                  books?.description??'',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -172,7 +192,7 @@ class BookFlowView extends GetView<BookFlowController> {
                                 ),
                                 SizedBox(height: 4.h),
                                 Text(
-                                  'Age: 2-4',
+                                  books?.ageRange??'',
                                   style: TextStyle(
                                     fontSize: 15.sp,
                                     color: Colors.black87,
