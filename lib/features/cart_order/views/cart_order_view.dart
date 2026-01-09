@@ -132,17 +132,22 @@ class CartOrderView extends GetView<CartOrderController> {
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 23),
             ),
             const SizedBox(height: 15),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.blueAccent.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF6C8CFF)),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: const Text(
-                  'Add more personalized books',
-                  style: TextStyle(color: Color(0xFF6C8CFF)),
+            GestureDetector(
+              onTap: () {
+                Get.offAllNamed(Routes.BottomNavBar);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.blueAccent.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFF6C8CFF)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: const Text(
+                    'Add more personalized books',
+                    style: TextStyle(color: Color(0xFF6C8CFF)),
+                  ),
                 ),
               ),
             ),

@@ -6,8 +6,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class PersonalizeBookController extends GetxController {
+
   final TextEditingController cityController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
+
   int? selectedAge;
   RxBool rememberMe = false.obs;
   RxString selectedOption = ''.obs;
@@ -37,13 +39,12 @@ class PersonalizeBookController extends GetxController {
     });
     if(response.isSuccess){
       Get.snackbar("Success", "Details posted successfully");
-      Get.toNamed(Routes.UPLOAD_PHOTO,);
+      Get.toNamed(Routes.UPLOAD_PHOTO,arguments: {"templateId": templateId});
     }
     else{
       Get.snackbar("Error", "Error posting details",  backgroundColor: Colors.red);
     }
   }
-
 
 
   RxBool isPasswordHidden = true.obs;

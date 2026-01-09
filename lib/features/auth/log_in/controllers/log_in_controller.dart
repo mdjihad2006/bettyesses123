@@ -68,7 +68,7 @@ class LogInController extends GetxController {
         final data = response.responseData;
         await SharedPreferencesHelper.saveAccessToken(data?['data']['accessToken']);
         isLoading.value = false;
-        Get.toNamed(Routes.BottomNavBar,  arguments: {"email":emailController.text,"isFromForgotPassword":"LOGIN"});
+        Get.offAllNamed(Routes.BottomNavBar,  arguments: {"email":emailController.text,"isFromForgotPassword":"LOGIN"});
       }
     }catch(e){
       isLoading.value = false;

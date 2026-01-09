@@ -17,7 +17,7 @@ class BookDetailsView extends GetView<BookDetailsController> {
 
   @override
   Widget build(BuildContext context) {
-    book = Get.arguments as BookTemplate?;
+    book = Get.arguments;
     print('Book title: ${book?.title}');
 
     return Scaffold(

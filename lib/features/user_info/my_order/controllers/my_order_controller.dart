@@ -1,7 +1,13 @@
+import 'package:bettyesses123/app/common/network_service/network_service.dart';
 import 'package:get/get.dart';
 
 class MyOrderController extends GetxController {
-  //TODO: Implement MyOrderController
+
+  final networkCaller = NetworkCaller();
+
+  /*Future<void> getOrder() async{
+    final response = await networkCaller.
+  }*/
 
   final count = 0.obs;
   @override

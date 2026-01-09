@@ -4,22 +4,21 @@ import 'package:bettyesses123/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChangePasswordController extends GetxController {
+class ResetPasswordController extends GetxController {
   final isLoading = false.obs;
   final passwordVisible = false.obs;
-  final oldPasswordVisible = false.obs;
   final confirmPasswordVisible = false.obs;
 
-  final passwordController = TextEditingController();
-  final oldPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  final passwordError = RxnString();
-  final oldPasswordError = RxnString();
+  final newPasswordError = RxnString();
   final confirmPasswordError = RxnString();
+
   final _networkCaller = NetworkCaller();
 
   RxBool rememberMe = false.obs;
+
 
   @override
   void onInit() {
@@ -34,10 +33,6 @@ class ChangePasswordController extends GetxController {
     passwordVisible.value = !passwordVisible.value;
   }
 
-  void toggleOldPasswordVisibility() {
-    oldPasswordVisible.value = !oldPasswordVisible.value;
-  }
-
   void toggleConfirmPasswordVisibility() {
     confirmPasswordVisible.value = !confirmPasswordVisible.value;
   }
@@ -45,31 +40,21 @@ class ChangePasswordController extends GetxController {
   bool validate() {
     bool valid = true;
 
-    if (oldPasswordController.text.isEmpty) {
-      oldPasswordError.value = "Password cannot be empty";
+    if (newPasswordController.text.isEmpty) {
+      newPasswordError.value = 'Password cannot be empty';
       valid = false;
-    } else if (oldPasswordController.text.length < 6) {
-      oldPasswordError.value = "Password must be at least 6 characters";
-      valid = false;
-    } else {
-      oldPasswordError.value = null;
-    }
-
-    if (passwordController.text.isEmpty) {
-      passwordError.value = "Password cannot be empty";
-      valid = false;
-    } else if (passwordController.text.length < 6) {
-      passwordError.value = "Password must be at least 6 characters";
+    } else if (newPasswordController.text.length < 6) {
+      newPasswordError.value = 'Password must be at least 6 characters';
       valid = false;
     } else {
-      passwordError.value = null;
+      newPasswordError.value = null;
     }
 
     if (confirmPasswordController.text.isEmpty) {
-      confirmPasswordError.value = "Confirm your password";
+      confirmPasswordError.value = 'Confirm your password';
       valid = false;
-    } else if (confirmPasswordController.text != passwordController.text) {
-      confirmPasswordError.value = "Passwords do not match";
+    } else if (confirmPasswordController.text != newPasswordController.text) {
+      confirmPasswordError.value = 'Passwords do not match';
       valid = false;
     } else {
       confirmPasswordError.value = null;
@@ -85,16 +70,12 @@ class ChangePasswordController extends GetxController {
 
     try {
       final response = await _networkCaller.postRequest(
-        url: AppUrls.changePassword,
-        body: {
-          "oldPassword": oldPasswordController.text.trim(),
-          "newPassword": passwordController.text.trim(),
-          "confirmPassword": confirmPasswordController.text.trim(),
-        },
+        url: AppUrls.resetPassword,
+        body: {"newPassword": newPasswordController.text},
       );
 
       if (response.isSuccess) {
-        Get.offAllNamed(Routes.MENU);
+        Get.offAllNamed(Routes.LOG_IN);
       } else {
         print('else else else');
         Get.snackbar(

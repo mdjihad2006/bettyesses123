@@ -1,16 +1,15 @@
 import 'package:bettyesses123/app/common/widgets/app_appbar.dart';
 import 'package:bettyesses123/app/common/widgets/custom_gradient_button.dart';
 import 'package:bettyesses123/app/common/widgets/step_indicator.dart';
-import 'package:bettyesses123/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
 
 import '../controllers/address_details_controller.dart';
 
 class AddressDetailsView extends GetView<AddressDetailsController> {
   const AddressDetailsView({super.key});
+
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
@@ -31,6 +30,8 @@ class AddressDetailsView extends GetView<AddressDetailsController> {
                 SizedBox(height: 20.h),
                 Obx(() => StepIndicator(step: controller.currentStep.value)),
                 SizedBox(height: 20.h),
+
+                // Contact Section
                 Text(
                   'Contact',
                   style: TextStyle(
@@ -38,33 +39,57 @@ class AddressDetailsView extends GetView<AddressDetailsController> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-
                 SizedBox(height: 10.h),
 
                 TextFormField(
+                  controller: controller.emailController,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     hintText: 'Email',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!GetUtils.isEmail(value)) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
                 ),
-
                 SizedBox(height: 10.h),
+
                 TextFormField(
+                  controller: controller.phoneController,
+                  keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     hintText: 'Phone',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your phone number';
+                    }
+                    if (value.length < 10) {
+                      return 'Please enter a valid phone number';
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(height: 10.h),
+
                 Text(
-                  'The Email will be used to keep you informatted about your order status.',
+                  'The Email will be used to keep you informed about your order status.',
+                  style: TextStyle(color: Colors.grey[600]),
                 ),
                 SizedBox(height: 20.h),
 
+                // Delivery Section
                 Text(
                   'Delivery',
                   style: TextStyle(
@@ -73,133 +98,198 @@ class AddressDetailsView extends GetView<AddressDetailsController> {
                   ),
                 ),
                 SizedBox(height: 10.h),
+
                 TextFormField(
+                  controller: controller.countryController,
                   decoration: InputDecoration(
                     hintText: 'Country / region',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your country';
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(height: 10.h),
+
                 Row(
                   children: [
                     Expanded(
                       child: TextFormField(
+                        controller: controller.firstNameController,
                         decoration: InputDecoration(
                           hintText: 'First name',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Required';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     SizedBox(width: 10.w),
                     Expanded(
                       child: TextFormField(
+                        controller: controller.lastNameController,
                         decoration: InputDecoration(
                           hintText: 'Last name',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Required';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: 10.h),
+
                 TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Street adress',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                TextFormField(
+                  controller: controller.streetAddressController,
                   decoration: InputDecoration(
                     hintText: 'Street address',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your street address';
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(height: 10.h),
+
+                TextFormField(
+                  controller: controller.streetAddress2Controller,
+                  decoration: InputDecoration(
+                    hintText: 'Apartment, suite, etc. (optional)',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10.h),
+
                 Row(
                   children: [
                     Expanded(
+                      flex: 2,
                       child: TextFormField(
+                        controller: controller.cityController,
                         decoration: InputDecoration(
                           hintText: 'City',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Required';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     SizedBox(width: 10.w),
                     Expanded(
-                      child: DropdownButtonFormField<String>(
+                      flex: 2,
+                      child: Obx(() => DropdownButtonFormField<String>(
                         decoration: InputDecoration(
                           hintText: 'State',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
-                        items: <String>['State 1', 'State 2', 'State 3']
+                        value: controller.selectedState.value.isEmpty
+                            ? null
+                            : controller.selectedState.value,
+                        items: controller.states
                             .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            })
-                            .toList(),
-                        onChanged: (String? newValue) {},
-                      ),
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          controller.setSelectedState(newValue);
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Required';
+                          }
+                          return null;
+                        },
+                      )),
                     ),
                     SizedBox(width: 10.w),
                     Expanded(
+                      flex: 2,
                       child: TextFormField(
+                        controller: controller.postalCodeController,
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                          hintText: 'Code',
+                          hintText: 'ZIP',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Required';
+                          }
+                          if (value.length != 5) {
+                            return 'Invalid';
+                          }
+                          return null;
+                        },
                       ),
                     ),
-                    SizedBox(width: 10.w),
                   ],
                 ),
                 SizedBox(height: 10.h),
+
                 Row(
                   children: [
                     Obx(
-                      () => Checkbox(
+                          () => Checkbox(
                         value: controller.rememberMe.value,
                         onChanged: (value) {
                           controller.toggleRememberMe(value!);
                         },
                       ),
                     ),
-                    Text('Save this information for next time'),
+                    Expanded(
+                      child: Text('Save this information for next time'),
+                    ),
                   ],
                 ),
                 SizedBox(height: 20.h),
+
                 Text(
                   'Order Summary',
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22),
                 ),
-
                 SizedBox(height: 13.h),
 
                 _orderSummary(),
-
                 SizedBox(height: 20.h),
 
-                _continueButton(),
-
+                _continueButton(formKey),
                 SizedBox(height: 25.h),
               ],
             ),
@@ -236,8 +326,19 @@ class AddressDetailsView extends GetView<AddressDetailsController> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    hintText: 'Code',
-                    suffix: InkWell(child: Text('Apply')),
+                    hintText: 'Promo Code',
+                    suffix: InkWell(
+                      onTap: () {
+                        // Apply promo code logic
+                      },
+                      child: Text(
+                        'Apply',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -264,11 +365,11 @@ class AddressDetailsView extends GetView<AddressDetailsController> {
   }
 
   Widget _priceRow(
-    String title,
-    String price, {
-    bool isBold = false,
-    Color? color,
-  }) {
+      String title,
+      String price, {
+        bool isBold = false,
+        Color? color,
+      }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -293,14 +394,26 @@ class AddressDetailsView extends GetView<AddressDetailsController> {
     );
   }
 
-  // BUTTON
-
-  Widget _continueButton() {
-    return GradientElevatedButton(
+  Widget _continueButton(GlobalKey<FormState> formKey) {
+    return Obx(() => controller.isLoading.value
+        ? Center(
+      child: CircularProgressIndicator(),
+    )
+        : GradientElevatedButton(
       text: 'Save Preview & Continue to Payment',
       onPressed: () {
-        Get.toNamed(Routes.PAYMENT_DETAILS);
+        if (formKey.currentState!.validate()) {
+          controller.submitOrder();
+        } else {
+          Get.snackbar(
+            'Validation Error',
+            'Please fill all required fields correctly',
+            backgroundColor: Colors.orange,
+            colorText: Colors.white,
+            snackPosition: SnackPosition.TOP,
+          );
+        }
       },
-    );
+    ));
   }
 }

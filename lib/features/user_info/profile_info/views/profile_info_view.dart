@@ -12,9 +12,9 @@ import '../controllers/profile_info_controller.dart';
 
 class ProfileInfoView extends GetView<ProfileInfoController> {
   const ProfileInfoView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ProfileInfoController());
     final _formKey = GlobalKey<FormState>();
 
     return Scaffold(
@@ -28,17 +28,47 @@ class ProfileInfoView extends GetView<ProfileInfoController> {
               SizedBox(height: 30.h),
               Column(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(35),
+                  Obx(() => ClipRRect(
+                    borderRadius: BorderRadius.circular(60),
                     child: Container(
                       height: 120,
                       width: 120,
-                      child: Image.asset(
-                        AppImages.profilePic,
-                        fit: BoxFit.contain,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        shape: BoxShape.circle,
+                      ),
+                      child: controller.userImageUrl.value.isNotEmpty
+                          ? Image.network(
+                        controller.getFullImageUrl(),
+                        width: 120,
+                        height: 120,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(
+                            Icons.person,
+                            size: 50,
+                            color: Colors.grey[600],
+                          );
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                                  : null,
+                            ),
+                          );
+                        },
+                      )
+                          : Icon(
+                        Icons.person,
+                        size: 50,
+                        color: Colors.grey[600],
                       ),
                     ),
-                  ),
+                  )),
                   SizedBox(height: 20.h),
                   Text(
                     'Profile Information',
@@ -62,7 +92,7 @@ class ProfileInfoView extends GetView<ProfileInfoController> {
                         children: [
                           SizedBox(height: 10.h),
                           Text(
-                            'Name',
+                            'First name',
                             style: CustomTextStyles.t16(
                               weight: FontWeight.w500,
                               color: Colors.black87,
@@ -71,15 +101,46 @@ class ProfileInfoView extends GetView<ProfileInfoController> {
                           SizedBox(height: 7.h),
                           TextFormField(
                             controller: controller.firstNameController,
+                            enabled: false,
                             decoration: InputDecoration(
                               hintText: 'Allan ',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
+                              filled: true,
+                              fillColor: Colors.grey[200],
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter name';
+                                return 'Please enter first name';
+                              }
+                              return null;
+                            },
+                          ),
+
+                          SizedBox(height: 10.h),
+                          Text(
+                            'Last name',
+                            style: CustomTextStyles.t16(
+                              weight: FontWeight.w500,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          SizedBox(height: 7.h),
+                          TextFormField(
+                            controller: controller.lastNameController,
+                            enabled: false,
+                            decoration: InputDecoration(
+                              hintText: 'paul ',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter last name';
                               }
                               return null;
                             },
@@ -96,11 +157,14 @@ class ProfileInfoView extends GetView<ProfileInfoController> {
                           SizedBox(height: 7.h),
                           TextFormField(
                             controller: controller.emailController,
+                            enabled: false,
                             decoration: InputDecoration(
                               hintText: 'null@gmail.com ',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
+                              filled: true,
+                              fillColor: Colors.grey[200],
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -114,14 +178,7 @@ class ProfileInfoView extends GetView<ProfileInfoController> {
                           GradientElevatedButton(
                             text: 'Edit Information',
                             onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                Get.toNamed(Routes.EDIT_PROFILE);
-                              } else {
-                                Get.snackbar(
-                                  'Error',
-                                  'Please fill all the fields',
-                                );
-                              }
+                              Get.toNamed(Routes.EDIT_PROFILE);
                             },
                           ),
 

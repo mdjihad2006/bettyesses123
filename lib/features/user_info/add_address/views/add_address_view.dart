@@ -14,7 +14,7 @@ class AddAddressView extends GetView<AddAddressController> {
   const AddAddressView({super.key});
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ProfileInfoController());
+    // final controller = Get.put(ProfileInfoController());
     final _formKey = GlobalKey<FormState>();
     String? selectedAddressType;
 
@@ -70,9 +70,34 @@ class AddAddressView extends GetView<AddAddressController> {
                           ),
                           SizedBox(height: 7.h),
                           TextFormField(
-                            controller: controller.emailController,
+                            controller: controller.lastNameController,
                             decoration: InputDecoration(
                               hintText: 'Walker',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter last name';
+                              }
+                              return null;
+                            },
+                          ),
+
+                          SizedBox(height: 10.h),
+                          Text(
+                            'Phone',
+                            style: CustomTextStyles.t16(
+                              weight: FontWeight.w500,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          SizedBox(height: 7.h),
+                          TextFormField(
+                            controller: controller.phoneController,
+                            decoration: InputDecoration(
+                              hintText: 'Phone number',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
@@ -113,20 +138,22 @@ class AddAddressView extends GetView<AddAddressController> {
                                 ),
                                 items: const [
                                   DropdownMenuItem(
-                                    value: 'Home',
-                                    child: Text('Home'),
+                                    value: 'HOME',
+                                    child: Text('HOME'),
                                   ),
                                   DropdownMenuItem(
-                                    value: 'School',
-                                    child: Text('School'),
+                                    value: 'OFFICE',
+                                    child: Text('OFFICE'),
                                   ),
                                   DropdownMenuItem(
-                                    value: 'Office',
-                                    child: Text('Office'),
+                                    value: 'OTHER ',
+                                    child: Text('OTHER '),
                                   ),
                                 ],
                                 onChanged: (value) {
                                   selectedAddressType = value;
+                                  controller.address.value = value!;
+                                  print(controller.address.value);
                                 },
                                 validator: (value) {
                                   if (value == null) {
@@ -140,7 +167,7 @@ class AddAddressView extends GetView<AddAddressController> {
 
                           SizedBox(height: 10.h),
                           Text(
-                            'Home',
+                            'Street Address',
                             style: CustomTextStyles.t16(
                               weight: FontWeight.w500,
                               color: Colors.black87,
@@ -148,7 +175,7 @@ class AddAddressView extends GetView<AddAddressController> {
                           ),
                           SizedBox(height: 7.h),
                           TextFormField(
-                            controller: controller.emailController,
+                            controller: controller.streetController,
                             decoration: InputDecoration(
                               hintText: '270/2',
                               border: OutlineInputBorder(
@@ -173,7 +200,7 @@ class AddAddressView extends GetView<AddAddressController> {
                           ),
                           SizedBox(height: 7.h),
                           TextFormField(
-                            controller: controller.emailController,
+                            controller: controller.aptController,
                             decoration: InputDecoration(
                               hintText: '270/2',
                               border: OutlineInputBorder(
@@ -198,7 +225,7 @@ class AddAddressView extends GetView<AddAddressController> {
                           ),
                           SizedBox(height: 7.h),
                           TextFormField(
-                            controller: controller.emailController,
+                            controller: controller.cityController,
                             decoration: InputDecoration(
                               hintText: 'Toronto',
                               border: OutlineInputBorder(
@@ -223,7 +250,7 @@ class AddAddressView extends GetView<AddAddressController> {
                           ),
                           SizedBox(height: 7.h),
                           TextFormField(
-                            controller: controller.emailController,
+                            controller: controller.stateController,
                             decoration: InputDecoration(
                               hintText: 'Toronto',
                               border: OutlineInputBorder(
@@ -248,7 +275,7 @@ class AddAddressView extends GetView<AddAddressController> {
                           ),
                           SizedBox(height: 7.h),
                           TextFormField(
-                            controller: controller.emailController,
+                            controller: controller.zipCodeController,
                             decoration: InputDecoration(
                               hintText: '11234',
                               border: OutlineInputBorder(
@@ -273,7 +300,7 @@ class AddAddressView extends GetView<AddAddressController> {
                           ),
                           SizedBox(height: 7.h),
                           TextFormField(
-                            controller: controller.emailController,
+                            controller: controller.countryController,
                             decoration: InputDecoration(
                               hintText: 'Canada',
                               border: OutlineInputBorder(
@@ -304,7 +331,12 @@ class AddAddressView extends GetView<AddAddressController> {
                               Expanded(
                                 child: GradientElevatedButton(
                                   text: 'Save',
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      controller.postShippingAddress();
+                                      Get.back();
+                                    }
+                                  },
                                 ),
                               ),
                             ],

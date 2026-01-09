@@ -1,18 +1,16 @@
 import 'package:bettyesses123/app/common/widgets/app_appbar.dart';
-import 'package:bettyesses123/app/common/widgets/custom_gradient_button.dart';
 import 'package:bettyesses123/app/common/widgets/custom_outline_button.dart';
-import 'package:bettyesses123/app/common/widgets/custom_text_style.dart'
-    show CustomTextStyles;
+import 'package:bettyesses123/app/common/widgets/custom_text_style.dart';
 import 'package:bettyesses123/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 
-import '../controllers/change_password_controller.dart';
+import '../controllers/reset_password_controller.dart';
 
-class ChangePasswordView extends GetView<ChangePasswordController> {
-  const ChangePasswordView({super.key});
+class ResetPasswordView extends GetView<ResetPasswordController> {
+  const ResetPasswordView({super.key});
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
@@ -37,50 +35,6 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
                         children: [
                           SizedBox(height: 14.h),
                           Text(
-                            'Old Password',
-                            style: CustomTextStyles.t16(
-                              weight: FontWeight.w500,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          SizedBox(height: 7.h),
-
-                          Obx(
-                                () => TextFormField(
-                              controller: controller.oldPasswordController,
-                              obscureText:
-                              controller.oldPasswordVisible.value,
-                              decoration: InputDecoration(
-                                hintText: 'Enter your password',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    color: Colors.black54,
-                                    controller.oldPasswordVisible.value
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                  ),
-                                  onPressed: () {
-                                    controller
-                                        .toggleOldPasswordVisibility();
-                                  },
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your password';
-                                } else if (value.length < 8) {
-                                  return 'Password must be at least 8 characters long';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(height: 14.h),
-
-                          Text(
                             'New Password',
                             style: CustomTextStyles.t16(
                               weight: FontWeight.w500,
@@ -90,10 +44,10 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
                           SizedBox(height: 7.h),
 
                           Obx(
-                            () => TextFormField(
-                              controller: controller.passwordController,
+                                () => TextFormField(
+                              controller: controller.newPasswordController,
                               obscureText:
-                                  controller.passwordVisible.value,
+                              controller.passwordVisible.value,
                               decoration: InputDecoration(
                                 hintText: 'Enter your password',
                                 border: OutlineInputBorder(
@@ -134,10 +88,10 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
                           SizedBox(height: 7.h),
 
                           Obx(
-                            () => TextFormField(
+                                () => TextFormField(
                               controller: controller.confirmPasswordController,
                               obscureText:
-                                  controller.confirmPasswordVisible.value,
+                              controller.confirmPasswordVisible.value,
                               decoration: InputDecoration(
                                 hintText: 'Enter your password',
                                 border: OutlineInputBorder(
@@ -152,7 +106,7 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
                                   ),
                                   onPressed: () {
                                     controller
-                                        .togglePasswordVisibility();
+                                        .toggleConfirmPasswordVisibility();
                                   },
                                 ),
                               ),

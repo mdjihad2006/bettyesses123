@@ -65,7 +65,7 @@ class OtpVerificationController extends GetxController {
       );
 
       if (response.isSuccess) {
-        // OTP verified
+
         if (isFromForgotPassword == "LOGIN") {
           final data = response.responseData;
           Get.toNamed(Routes.BottomNavBar);
@@ -79,7 +79,8 @@ class OtpVerificationController extends GetxController {
             data?['data']['accessToken'],
           );
         } else {
-          Get.offNamed(Routes.CHANGE_PASSWORD, arguments: {'email': userId});
+          Get.offNamed(Routes.RESET_PASSWORD, arguments: {'email': userId});
+          print('everything ok');
         }
         clearOtp();
       } else {

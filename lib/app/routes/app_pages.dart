@@ -36,6 +36,8 @@ import '../../features/payment_details/bindings/payment_details_binding.dart';
 import '../../features/payment_details/views/payment_details_view.dart';
 import '../../features/personalize_book/bindings/personalize_book_binding.dart';
 import '../../features/personalize_book/views/personalize_book_view.dart';
+import '../../features/reset_password/bindings/reset_password_binding.dart';
+import '../../features/reset_password/views/reset_password_view.dart';
 import '../../features/splash_screen/bindings/splash_screen_binding.dart';
 import '../../features/splash_screen/views/splash_screen_view.dart';
 import '../../features/upload_photo/bindings/upload_photo_binding.dart';
@@ -230,6 +232,11 @@ class AppPages {
       name: _Paths.FORGOT_PASSWORD,
       page: () => const ForgotPasswordView(),
       binding: ForgotPasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.RESET_PASSWORD,
+      page: () => const ResetPasswordView(),
+      binding: ResetPasswordBinding(),
     ),
   ];
 }

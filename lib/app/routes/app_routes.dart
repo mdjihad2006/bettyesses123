@@ -33,7 +33,8 @@ abstract class Routes {
   static const PROMO_CODE = _Paths.PROMO_CODE;
   static const NOTIFICATION = _Paths.NOTIFICATION;
   static const NOTIFICATION_SETTINGS = _Paths.NOTIFICATION_SETTINGS;
-  static const FORGOT_PASSWORD =_Paths.FORGOT_PASSWORD;
+  static const FORGOT_PASSWORD = _Paths.FORGOT_PASSWORD;
+  static const RESET_PASSWORD = _Paths.RESET_PASSWORD;
 }
 
 abstract class _Paths {
@@ -69,4 +70,5 @@ abstract class _Paths {
   static const NOTIFICATION = '/notification';
   static const NOTIFICATION_SETTINGS = '/notification-settings';
   static const FORGOT_PASSWORD = '/forgot-password';
+  static const RESET_PASSWORD = '/reset-password';
 }

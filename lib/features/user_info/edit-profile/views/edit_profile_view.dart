@@ -30,35 +30,89 @@ class EditProfileView extends GetView<EditProfileController> {
                 children: [
                   Stack(
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(35),
-                        child: Container(
-                          height: 120,
-                          width: 120,
-                          child: Image.asset(
-                            AppImages.profilePic,
-                            fit: BoxFit.contain,
+                      Obx(
+                            () => ClipRRect(
+                          borderRadius: BorderRadius.circular(60),
+                          child: Container(
+                            height: 120,
+                            width: 120,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              shape: BoxShape.circle,
+                            ),
+                            child: controller.selectedImage.value != null
+                                ? Image.file(
+                              controller.selectedImage.value!,
+                              width: 120,
+                              height: 120,
+                              fit: BoxFit.cover,
+                            )
+                                : (controller.menuController.userData.value?.image != null
+                                ? Image.network(
+                              controller.getFullImageUrl(
+                                  controller.menuController.userData.value!.image),
+                              width: 120,
+                              height: 120,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  Icons.person,
+                                  size: 50,
+                                  color: Colors.grey[600],
+                                );
+                              },
+                            )
+                                : Icon(
+                              Icons.person,
+                              size: 50,
+                              color: Colors.grey[600],
+                            )),
                           ),
                         ),
                       ),
                       Positioned(
                         bottom: 0,
                         right: 0,
-                        child: InkWell(
-                          onTap: () {
-                            // controller.pickImage();
-                          },
-                          child: Container(
-                            height: 30,
-                            width: 30,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [],
-                            ),
-                            child: Icon(
-                              Icons.camera_alt,
-                              color: Color(0xff4D2F00),
+                        child: Obx(
+                              () => InkWell(
+                            onTap: controller.isImageUploading.value
+                                ? null
+                                : () async {
+                              await controller.pickFromGallery();
+
+                              if (controller.selectedImage.value != null) {
+                                controller.uploadProfileImage();
+                              }
+                            },
+                            child: Container(
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: controller.isImageUploading.value
+                                  ? Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xff4D2F00),
+                                  ),
+                                ),
+                              )
+                                  : Icon(
+                                Icons.camera_alt,
+                                color: Color(0xff4D2F00),
+                                size: 18,
+                              ),
                             ),
                           ),
                         ),
@@ -90,7 +144,7 @@ class EditProfileView extends GetView<EditProfileController> {
                         children: [
                           SizedBox(height: 10.h),
                           Text(
-                            'Write New Name',
+                            'Write New First Name',
                             style: CustomTextStyles.t16(
                               weight: FontWeight.w500,
                               color: Colors.black87,
@@ -108,6 +162,31 @@ class EditProfileView extends GetView<EditProfileController> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter name';
+                              }
+                              return null;
+                            },
+                          ),
+
+                          SizedBox(height: 10.h),
+                          Text(
+                            'Write New Last name',
+                            style: CustomTextStyles.t16(
+                              weight: FontWeight.w500,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          SizedBox(height: 7.h),
+                          TextFormField(
+                            controller: controller.lastNameController,
+                            decoration: InputDecoration(
+                              hintText: 'paul ',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter last name';
                               }
                               return null;
                             },
@@ -143,7 +222,9 @@ class EditProfileView extends GetView<EditProfileController> {
                             children: [
                               Expanded(
                                 child: CustomOutlineButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Get.back();
+                                  },
                                   child: Text('Cancel'),
                                 ),
                               ),
@@ -153,9 +234,7 @@ class EditProfileView extends GetView<EditProfileController> {
                                   text: 'Save',
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                      // Get.toNamed(Routes.VERIFY_OTP,  arguments: {
-                                      //   'email': controller.emailController.text,
-                                      // });
+                                      controller.updateProfile();
                                     } else {
                                       Get.snackbar(
                                         'Error',

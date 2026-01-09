@@ -1,7 +1,5 @@
 import 'package:bettyesses123/app/common/widgets/app_appbar.dart';
-import 'package:bettyesses123/app/common/widgets/custom_gradient_button.dart';
 import 'package:bettyesses123/app/common/widgets/custom_text_style.dart';
-import 'package:bettyesses123/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

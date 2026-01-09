@@ -15,7 +15,7 @@ class UploadPhotoView extends GetView<UploadPhotoController> {
   const UploadPhotoView({super.key});
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ImagePickerController());
+    final imageController = Get.put(ImagePickerController());
 
     return Scaffold(
       backgroundColor: Color(0xFFF6F6F6),
@@ -40,9 +40,9 @@ class UploadPhotoView extends GetView<UploadPhotoController> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Obx(() {
-                    return controller.selectedImage.value == null
-                        ? _uploadImage(controller)
-                        : _selectedImageView(controller);
+                    return imageController.selectedImage.value == null
+                        ? _uploadImage(imageController)
+                        : _selectedImageView(imageController);
                   }),
                 ),
               ),
@@ -50,6 +50,7 @@ class UploadPhotoView extends GetView<UploadPhotoController> {
               GradientElevatedButton(
                 text: 'Personalize & Preview',
                 onPressed: () {
+                  // controller.uploadPhoto();
                   Get.toNamed(Routes.BOOK_PREVIEW);
                 },
               ),

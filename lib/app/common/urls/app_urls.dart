@@ -13,9 +13,17 @@ class AppUrls {
   static const String userDetails = '$baseUrl/books';
   static const String cart = '$baseUrl/cart';
   static const String signInWithGoogle = 'https://api.dmvjobs.cloud/api/v1/auth/google-login';
+  static const String menuItem = '$baseUrl/profile/me';
+  static const String updateProfile = '$baseUrl/profile/update';
+  static const String postAddress = '$baseUrl/shipping-addresses';
+  static const String shippingAddress = '$baseUrl/shipping-addresses';
+  static const String changePass = '$baseUrl/profile/change-password';
+  static const String profilePic = '$baseUrl/profile/upload-image';
+  static const String orders = '$baseUrl/orders';
 
 
   /// all job list
   static  String getAlljobsList(int limit) => '$baseUrl/services/available?limit=$limit';
   static  String getServiceDetails(String id) => '$baseUrl/services/$id/details-with-provider';
+  static  String uploadChildImg(String bookId) => '$baseUrl/books/$bookId/upload-photo';
 }
