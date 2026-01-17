@@ -1,8 +1,8 @@
 import 'package:bettyesses123/app/routes/app_pages.dart';
+import 'package:bettyesses123/features/notification/controllers/notification_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
 
 import '../controllers/home_controller.dart';
@@ -12,6 +12,8 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(HomeController());
+
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
       body: Padding(
@@ -32,44 +34,57 @@ class HomeView extends GetView<HomeController> {
                     ),
                   ),
                   const Spacer(),
-                  Stack(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Get.toNamed(Routes.NOTIFICATION);
-                        },
-                        icon: const Icon(Icons.notifications_none, size: 33),
-                      ),
-                      Positioned(
-                        right: 5,
-                        top: 4,
-                        child: Container(
-                          height: 20,
-                          width: 20,
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '3',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12.sp,
+
+                  Obx(() {
+
+                    final notificationController = Get.isRegistered<NotificationController>()
+                        ? Get.find<NotificationController>()
+                        : Get.put(NotificationController());
+
+                    final count = notificationController.unreadCount.value;
+
+                    return Stack(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Get.toNamed(Routes.NOTIFICATION);
+                          },
+                          icon: const Icon(Icons.notifications_none, size: 33),
+                        ),
+                        if (count > 0)
+                          Positioned(
+                            right: 5,
+                            top: 4,
+                            child: Container(
+                              height: 20,
+                              width: 20,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  count > 99 ? '99+' : '$count',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    );
+                  })
                 ],
               ),
 
               SizedBox(height: 10.h),
 
-              /// Search
+              /// Search Bar
               SearchBar(
+                controller: controller.searchController,
                 hintText: 'Search',
                 elevation: WidgetStateProperty.all(0),
                 backgroundColor: WidgetStateProperty.all(Colors.white),
@@ -79,31 +94,29 @@ class HomeView extends GetView<HomeController> {
                   ),
                 ),
                 leading: const Icon(Icons.search),
+                onChanged: (value) {
+                  controller.getAllBooks(searchTerm: value);
+                },
               ),
 
-              SizedBox(height: 10.h),
+              SizedBox(height: 15.h),
 
               Text(
                 'Recently Viewed',
                 style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600),
               ),
-
               SizedBox(height: 12.h),
 
               SizedBox(
                 height: 300.h,
                 child: Obx(() {
-                  final data = controller.bookTemplateResponse.value?.data;
+                  final data = controller.recentlyViewedBooks;
 
-                  // Check if data is null or empty
-                  if (data == null || data.isEmpty) {
+                  if (data.isEmpty) {
                     return Center(
                       child: Text(
                         'No recent books available',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: Colors.grey,
-                        ),
+                        style: TextStyle(fontSize: 14.sp, color: Colors.grey),
                       ),
                     );
                   }
@@ -114,19 +127,12 @@ class HomeView extends GetView<HomeController> {
                     itemBuilder: (context, index) {
                       final books = data[index];
 
-                      final imageUrl = books?.coverImage;
-                      final hasLocalImage = index < controller.recentImages.length;
-
                       return Padding(
                         padding: const EdgeInsets.only(right: 12),
                         child: GestureDetector(
                           onTap: () {
-                            if (books != null) {
-                              Get.toNamed(
-                                Routes.BOOK_DETAILS,
-                                arguments: books,
-                              );
-                            }
+                            controller.addToRecentlyViewed(books);
+                            Get.toNamed(Routes.BOOK_DETAILS, arguments: books);
                           },
                           child: Container(
                             width: 155.w,
@@ -137,53 +143,64 @@ class HomeView extends GetView<HomeController> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                /// Book Image
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
-                                  child: hasLocalImage
-                                      ? Image.asset(
-                                    controller.recentImages[index],
+                                  child: CachedNetworkImage(
+                                    imageUrl: books.coverImage,
                                     width: 170.w,
                                     height: 190.h,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return _buildNetworkImage(imageUrl);
-                                    },
-                                  )
-                                      : _buildNetworkImage(imageUrl),
+                                    placeholder: (_, __) => Container(
+                                      width: 170.w,
+                                      height: 190.h,
+                                      color: Colors.grey.shade200,
+                                      child: const Icon(
+                                        Icons.image_not_supported_outlined,
+                                        size: 40,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    errorWidget: (_, __, ___) => Container(
+                                      width: 170.w,
+                                      height: 190.h,
+                                      color: Colors.grey.shade200,
+                                      child: const Icon(
+                                        Icons.image_not_supported_outlined,
+                                        size: 40,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        books?.title ?? 'No title',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 17.sp,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      SizedBox(height: 4.h),
-                                      Text(
-                                        books?.description ?? 'No description',
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      SizedBox(height: 4.h),
-                                      Text(
-                                        books?.ageRange ?? '',
-                                        style: TextStyle(
-                                          fontSize: 15.sp,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                    ],
+
+                                SizedBox(height: 6.h),
+
+                                Text(
+                                  books.title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+
+                                Text(
+                                  books.description,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+
+                                Text(
+                                  books.ageRange,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.black87,
                                   ),
                                 ),
                               ],
@@ -207,7 +224,7 @@ class HomeView extends GetView<HomeController> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   TextButton(
                     onPressed: () {
                       final books = controller.bookTemplateResponse.value?.data;
@@ -228,6 +245,7 @@ class HomeView extends GetView<HomeController> {
                 ],
               ),
 
+              /// All Books Grid
               Obx(() {
                 final data = controller.bookTemplateResponse.value?.data;
 
@@ -237,10 +255,7 @@ class HomeView extends GetView<HomeController> {
                       padding: EdgeInsets.symmetric(vertical: 50.h),
                       child: Text(
                         'No books available',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: Colors.grey,
-                        ),
+                        style: TextStyle(fontSize: 14.sp, color: Colors.grey),
                       ),
                     ),
                   );
@@ -262,18 +277,14 @@ class HomeView extends GetView<HomeController> {
 
                     return GestureDetector(
                       onTap: () {
-                        if (books != null) {
-                          Get.toNamed(
-                            Routes.BOOK_DETAILS,
-                            arguments: books,
-                          );
-                        }
-                      },
+                        controller.addToRecentlyViewed(books);
+                        Get.toNamed(Routes.BOOK_DETAILS, arguments: books);
+                                            },
                       child: Container(
                         width: 165.w,
                         decoration: BoxDecoration(
-                          color: Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
+                          color: Colors.transparent,
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,14 +292,13 @@ class HomeView extends GetView<HomeController> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(12),
                               child: CachedNetworkImage(
-                                imageUrl: books?.coverImage ?? '',
+                                imageUrl: books.coverImage,
                                 width: 170.w,
                                 height: 190.h,
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) => Container(
                                   width: 170.w,
                                   height: 190.h,
-                                  alignment: Alignment.center,
                                   color: Colors.grey.shade200,
                                   child: const Icon(
                                     Icons.image_not_supported_outlined,
@@ -299,7 +309,6 @@ class HomeView extends GetView<HomeController> {
                                 errorWidget: (context, url, error) => Container(
                                   width: 170.w,
                                   height: 190.h,
-                                  alignment: Alignment.center,
                                   color: Colors.grey.shade200,
                                   child: const Icon(
                                     Icons.image_not_supported_outlined,
@@ -315,7 +324,7 @@ class HomeView extends GetView<HomeController> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    books?.title ?? '',
+                                    books.title,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -325,7 +334,7 @@ class HomeView extends GetView<HomeController> {
                                   ),
                                   SizedBox(height: 4.h),
                                   Text(
-                                    books?.description ?? '',
+                                    books.description,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -335,7 +344,7 @@ class HomeView extends GetView<HomeController> {
                                   ),
                                   SizedBox(height: 4.h),
                                   Text(
-                                    books?.ageRange ?? '',
+                                    books.ageRange,
                                     style: TextStyle(
                                       fontSize: 15.sp,
                                       color: Colors.black87,
@@ -353,38 +362,6 @@ class HomeView extends GetView<HomeController> {
               }),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  // Helper method to build network image
-  Widget _buildNetworkImage(String? imageUrl) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl ?? '',
-      width: 170.w,
-      height: 190.h,
-      fit: BoxFit.cover,
-      placeholder: (context, url) => Container(
-        width: 170.w,
-        height: 190.h,
-        alignment: Alignment.center,
-        color: Colors.grey.shade200,
-        child: const Icon(
-          Icons.image_not_supported_outlined,
-          size: 40,
-          color: Colors.grey,
-        ),
-      ),
-      errorWidget: (context, url, error) => Container(
-        width: 170.w,
-        height: 190.h,
-        alignment: Alignment.center,
-        color: Colors.grey.shade200,
-        child: const Icon(
-          Icons.image_not_supported_outlined,
-          size: 40,
-          color: Colors.grey,
         ),
       ),
     );

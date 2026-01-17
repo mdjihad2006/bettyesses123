@@ -14,7 +14,7 @@ class BookPreviewView extends GetView<BookPreviewController> {
   const BookPreviewView({super.key});
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(BookPreviewController());
+    Get.put(BookPreviewController());
     final sliderController = Get.put(ImageSliderController());
 
     return Scaffold(
@@ -87,7 +87,7 @@ class BookPreviewView extends GetView<BookPreviewController> {
                       Stack(
                         clipBehavior: Clip.none,
                         children: [
-                          Container(
+                          SizedBox(
                             width: 280.w,
                             height: 260.h,
                             child: PageView.builder(

@@ -12,7 +12,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ForgotPasswordController());
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
@@ -42,7 +42,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Form(
-                      key: _formKey,
+                      key: formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

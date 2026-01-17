@@ -34,9 +34,9 @@ class EditProfileController extends GetxController {
   void _setDataFromMenu() {
     final user = menuController.userData.value;
     if (user != null) {
-      firstNameController.text = user.firstName ?? '';
-      lastNameController.text = user.lastName ?? '';
-      emailController.text = user.email ?? '';
+      firstNameController.text = user.firstName;
+      lastNameController.text = user.lastName;
+      emailController.text = user.email;
     }
   }
 
@@ -47,7 +47,7 @@ class EditProfileController extends GetxController {
     }
   }
 
-  // Get token from SharedPreferences
+
   Future<String?> getToken() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -67,7 +67,6 @@ class EditProfileController extends GetxController {
     }
   }
 
-  // Upload image using multipart request
   Future<void> uploadProfileImage() async {
     if (selectedImage.value == null) {
       return;
@@ -127,7 +126,7 @@ class EditProfileController extends GetxController {
         Get.snackbar('Success', 'Image uploaded successfully',
             backgroundColor: Colors.green, colorText: Colors.white);
 
-        // Refresh menu to show new image
+
         await menuController.getMenu();
       } else {
         Get.snackbar('Error', 'Image upload failed',

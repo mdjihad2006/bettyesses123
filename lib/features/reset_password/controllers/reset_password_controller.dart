@@ -20,10 +20,6 @@ class ResetPasswordController extends GetxController {
   RxBool rememberMe = false.obs;
 
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   void toggleRememberMe(bool? value) {
     if (value != null) rememberMe.value = value;

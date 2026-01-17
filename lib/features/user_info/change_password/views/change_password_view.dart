@@ -1,5 +1,4 @@
 import 'package:bettyesses123/app/common/widgets/app_appbar.dart';
-import 'package:bettyesses123/app/common/widgets/custom_gradient_button.dart';
 import 'package:bettyesses123/app/common/widgets/custom_outline_button.dart';
 import 'package:bettyesses123/app/common/widgets/custom_text_style.dart'
     show CustomTextStyles;

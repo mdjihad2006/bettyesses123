@@ -29,7 +29,7 @@ class OtpVerificationController extends GetxController {
     userId = args['id'] ?? '';
     email = args['email'] ?? '';
     isFromForgotPassword = args['isFromForgotPassword'] ?? "";
-    print('hello${isFromForgotPassword}');
+    print('hello$isFromForgotPassword');
 
     startResendTimer();
   }

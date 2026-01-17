@@ -215,7 +215,7 @@ class AddressDetailsView extends GetView<AddressDetailsController> {
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
-                        value: controller.selectedState.value.isEmpty
+                        initialValue: controller.selectedState.value.isEmpty
                             ? null
                             : controller.selectedState.value,
                         items: controller.states

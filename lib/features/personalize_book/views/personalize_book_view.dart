@@ -74,7 +74,7 @@ class PersonalizeBookView extends GetView<PersonalizeBookController> {
                         SizedBox(height: 7.h),
 
                         DropdownButtonFormField<String>(
-                          value: controller.selectedAge?.toString(), // int কে string এ convert
+                          initialValue: controller.selectedAge?.toString(), // int কে string এ convert
                           hint: const Text('Select age'),
                           icon: const Icon(Icons.keyboard_arrow_down),
                           decoration: InputDecoration(

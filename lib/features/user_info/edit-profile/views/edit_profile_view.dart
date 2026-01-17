@@ -1,4 +1,3 @@
-import 'package:bettyesses123/app/common/images/app_images.dart';
 import 'package:bettyesses123/app/common/widgets/app_appbar.dart';
 import 'package:bettyesses123/app/common/widgets/custom_gradient_button.dart';
 import 'package:bettyesses123/app/common/widgets/custom_outline_button.dart';
@@ -15,7 +14,7 @@ class EditProfileView extends GetView<EditProfileController> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(EditProfileController());
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
@@ -138,7 +137,7 @@ class EditProfileView extends GetView<EditProfileController> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Form(
-                      key: _formKey,
+                      key: formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -233,7 +232,7 @@ class EditProfileView extends GetView<EditProfileController> {
                                 child: GradientElevatedButton(
                                   text: 'Save',
                                   onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
+                                    if (formKey.currentState!.validate()) {
                                       controller.updateProfile();
                                     } else {
                                       Get.snackbar(

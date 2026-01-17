@@ -11,13 +11,5 @@ class BookDetailsController extends GetxController {
     print('Book title: ${book?.title}');
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

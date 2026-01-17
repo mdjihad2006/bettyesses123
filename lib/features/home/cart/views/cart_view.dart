@@ -2,6 +2,7 @@ import 'package:bettyesses123/app/common/images/app_images.dart';
 import 'package:bettyesses123/app/common/widgets/custom_gradient_button.dart';
 import 'package:bettyesses123/app/common/widgets/custom_outline_button.dart';
 import 'package:bettyesses123/app/routes/app_pages.dart';
+import 'package:bettyesses123/features/notification/controllers/notification_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -32,37 +33,48 @@ class CartView extends GetView<CartController> {
                     ),
                   ),
                   const Spacer(),
-                  Stack(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Get.toNamed(Routes.NOTIFICATION);
-                        },
-                        icon: const Icon(Icons.notifications_none, size: 33),
-                      ),
-                      Positioned(
-                        right: 5,
-                        top: 4,
-                        child: Container(
-                          height: 20,
-                          width: 20,
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '3',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12.sp,
+                  Obx(() {
+
+                    final notificationController = Get.isRegistered<NotificationController>()
+                        ? Get.find<NotificationController>()
+                        : Get.put(NotificationController());
+
+                    final count = notificationController.unreadCount.value;
+
+                    return Stack(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Get.toNamed(Routes.NOTIFICATION);
+                          },
+                          icon: const Icon(Icons.notifications_none, size: 33),
+                        ),
+                        if (count > 0)
+                          Positioned(
+                            right: 5,
+                            top: 4,
+                            child: Container(
+                              height: 20,
+                              width: 20,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  count > 99 ? '99+' : '$count',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    );
+                  })
                 ],
               ),
               SizedBox(height: 20.h),

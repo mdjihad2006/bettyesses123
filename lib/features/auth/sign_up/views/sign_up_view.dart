@@ -1,6 +1,4 @@
-import 'package:bettyesses123/app/common/core/const/app_color.dart';
 import 'package:bettyesses123/app/common/widgets/app_appbar.dart';
-import 'package:bettyesses123/app/common/widgets/custom_gradient_button.dart';
 import 'package:bettyesses123/app/common/widgets/custom_text_style.dart';
 import 'package:bettyesses123/app/common/widgets/pic_text.dart';
 import 'package:bettyesses123/app/routes/app_pages.dart';
@@ -9,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/sign_up_controller.dart';
 
@@ -17,7 +14,7 @@ class SignUpView extends GetView<SignUpController> {
   const SignUpView({super.key});
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return Scaffold(
       backgroundColor: Color(0xFFF6F6F6),
@@ -32,7 +29,7 @@ class SignUpView extends GetView<SignUpController> {
                 child: Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Form(
-                    key: _formKey,
+                    key: formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

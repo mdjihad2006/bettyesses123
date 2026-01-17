@@ -2,7 +2,6 @@ import 'package:bettyesses123/app/common/widgets/app_appbar.dart';
 import 'package:bettyesses123/app/common/widgets/custom_gradient_button.dart';
 import 'package:bettyesses123/app/common/widgets/custom_outline_button.dart';
 import 'package:bettyesses123/app/common/widgets/custom_text_style.dart';
-import 'package:bettyesses123/features/user_info/profile_info/controllers/profile_info_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -15,7 +14,7 @@ class AddAddressView extends GetView<AddAddressController> {
   @override
   Widget build(BuildContext context) {
     // final controller = Get.put(ProfileInfoController());
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
     String? selectedAddressType;
 
     return Scaffold(
@@ -31,7 +30,7 @@ class AddAddressView extends GetView<AddAddressController> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Form(
-                      key: _formKey,
+                      key: formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -124,7 +123,7 @@ class AddAddressView extends GetView<AddAddressController> {
                               SizedBox(height: 7.h),
 
                               DropdownButtonFormField<String>(
-                                value: selectedAddressType,
+                                initialValue: selectedAddressType,
                                 hint: const Text('Select address type'),
                                 icon: const Icon(Icons.keyboard_arrow_down),
                                 decoration: InputDecoration(
@@ -332,7 +331,7 @@ class AddAddressView extends GetView<AddAddressController> {
                                 child: GradientElevatedButton(
                                   text: 'Save',
                                   onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
+                                    if (formKey.currentState!.validate()) {
                                       controller.postShippingAddress();
                                       Get.back();
                                     }

@@ -20,10 +20,16 @@ class AppUrls {
   static const String changePass = '$baseUrl/profile/change-password';
   static const String profilePic = '$baseUrl/profile/upload-image';
   static const String orders = '$baseUrl/orders';
+  static const String myOrders = '$baseUrl/orders/my-orders?page=1&limit=10&sortBy=createdAt&sortOrder=desc';
+  static const String terms = '$baseUrl/legal/public/terms';
+  static const String privacyPolicy = '$baseUrl/legal/public/privacy';
+  static const String getNotification = '$baseUrl/notifications';
+  static const String unreadNotification = '$baseUrl/notifications/unread-count';
 
 
   /// all job list
   static  String getAlljobsList(int limit) => '$baseUrl/services/available?limit=$limit';
   static  String getServiceDetails(String id) => '$baseUrl/services/$id/details-with-provider';
   static  String uploadChildImg(String bookId) => '$baseUrl/books/$bookId/upload-photo';
+  static  String cancelOrder(String orderId) => '$baseUrl/orders/$orderId/cancel';
 }

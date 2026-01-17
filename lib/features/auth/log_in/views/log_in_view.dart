@@ -16,7 +16,7 @@ class LogInView extends GetView<LogInController> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(LogInController());
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
@@ -25,7 +25,7 @@ class LogInView extends GetView<LogInController> {
           padding: EdgeInsets.symmetric(horizontal: 17.w),
           child: SingleChildScrollView(
             child: Form(
-              key: _formKey,
+              key: formKey,
               child: Column(
                 children: [
                   const AppAppbar(),
@@ -122,7 +122,7 @@ class LogInView extends GetView<LogInController> {
                   Obx(
                         () => GestureDetector(
                       onTap: () {
-                        if (_formKey.currentState!.validate()) {
+                        if (formKey.currentState!.validate()) {
                           controller.loginWithEmail();
                         }
                       },

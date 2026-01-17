@@ -9,7 +9,6 @@ class ProfileInfoController extends GetxController {
 
   final menuController = Get.find<MyMenuController>();
 
-  // Add this to get the user image URL
   RxString userImageUrl = ''.obs;
 
   @override

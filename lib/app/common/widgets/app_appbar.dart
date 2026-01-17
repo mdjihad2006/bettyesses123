@@ -8,7 +8,6 @@ class AppAppbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var textdata = Theme.of(context).textTheme;
 
     return Padding(
       padding: EdgeInsets.only(top: 45.h, left: 14.w,),

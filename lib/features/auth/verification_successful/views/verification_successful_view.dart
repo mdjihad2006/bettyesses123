@@ -1,7 +1,4 @@
 import 'package:bettyesses123/app/common/images/app_images.dart';
-import 'package:bettyesses123/app/common/widgets/app_appbar.dart';
-import 'package:bettyesses123/app/common/widgets/pic_text.dart';
-import 'package:bettyesses123/app/common/widgets/title_and_sub.dart';
 import 'package:bettyesses123/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

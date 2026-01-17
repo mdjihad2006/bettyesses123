@@ -1,3 +1,5 @@
+import 'package:bettyesses123/features/home/home/controllers/home_controller.dart';
+import 'package:bettyesses123/features/notification/controllers/notification_controller.dart';
 import 'package:get/get.dart';
 
 import '../../features/address_details/bindings/address_details_binding.dart';
@@ -22,11 +24,9 @@ import '../../features/home/book_flow/bindings/book_flow_binding.dart';
 import '../../features/home/book_flow/views/book_flow_view.dart';
 import '../../features/home/cart/bindings/cart_binding.dart';
 import '../../features/home/cart/views/cart_view.dart';
-import '../../features/home/home/bindings/home_binding.dart';
 import '../../features/home/home/views/home_view.dart';
 import '../../features/home/menu/bindings/menu_binding.dart';
 import '../../features/home/menu/views/menu_view.dart';
-import '../../features/notification/bindings/notification_binding.dart';
 import '../../features/notification/views/notification_view.dart';
 import '../../features/notification_settings/bindings/notification_settings_binding.dart';
 import '../../features/notification_settings/views/notification_settings_view.dart';
@@ -76,7 +76,10 @@ class AppPages {
     GetPage(
       name: _Paths.HOME,
       page: () => const HomeView(),
-      binding: HomeBinding(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<HomeController>(() => HomeController());
+        Get.put(NotificationController());
+      }),
     ),
     GetPage(
       name: _Paths.BOOK_FLOW,
@@ -221,7 +224,11 @@ class AppPages {
     GetPage(
       name: _Paths.NOTIFICATION,
       page: () => const NotificationView(),
-      binding: NotificationBinding(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<NotificationController>(
+              () => NotificationController(),
+        );
+      }),
     ),
     GetPage(
       name: _Paths.NOTIFICATION_SETTINGS,

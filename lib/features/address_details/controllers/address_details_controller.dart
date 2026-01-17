@@ -97,7 +97,7 @@ class AddressDetailsController extends GetxController {
       } else {
         Get.snackbar(
           'Error',
-          response.errorMessage ?? 'Failed to place order',
+          response.errorMessage,
           backgroundColor: Colors.red,
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP,

@@ -3,8 +3,6 @@ import 'package:bettyesses123/app/common/urls/app_urls.dart';
 import 'package:bettyesses123/app/common/widgets/image_picker.dart';
 import 'package:bettyesses123/app/routes/app_pages.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class UploadPhotoController extends GetxController {
   final networkCaller = NetworkCaller();

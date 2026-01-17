@@ -1,48 +1,49 @@
 import 'package:bettyesses123/app/common/network_service/network_service.dart';
 import 'package:bettyesses123/app/common/urls/app_urls.dart';
 import 'package:bettyesses123/features/home/home/model/home_model.dart';
+import 'package:bettyesses123/features/notification/controllers/notification_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
   final networkCaller = NetworkCaller();
   final bookTemplateResponse = Rxn<BookTemplateResponse>();
+  final searchController = TextEditingController();
+
+  /// ✅ Recently viewed books
+  final RxList<BookTemplate> recentlyViewedBooks = <BookTemplate>[].obs;
 
   @override
   void onInit() {
     super.onInit();
-    _allBookTemp();
+    getAllBooks();
+    Get.put(NotificationController());
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
+  Future<void> getAllBooks({String searchTerm = ''}) async {
+    final url = searchTerm.isEmpty
+        ? AppUrls.getAllBookTemp
+        : '${AppUrls.getAllBookTemp}?searchTerm=$searchTerm';
 
-  Future<void> _allBookTemp() async {
-    final response = await networkCaller.getRequest(
-      url: AppUrls.getAllBookTemp,
-    );
+    final response = await networkCaller.getRequest(url: url);
 
     if (response.isSuccess) {
-      bookTemplateResponse.value = BookTemplateResponse.fromJson(
-        response.responseData!,
-      );
+      bookTemplateResponse.value =
+          BookTemplateResponse.fromJson(response.responseData!);
     }
   }
 
-  final List<String> allImages = [
-    'assets/images/book_image.png',
-    'assets/images/app_image2.png',
-    'assets/images/app_image3.png',
-    'assets/images/app_image4.png',
-    'assets/images/app_image5.png',
-    'assets/images/app_image6.png',
-  ];
+  void addToRecentlyViewed(BookTemplate book) {
+    // remove if already exists (avoid duplicate)
+    recentlyViewedBooks.removeWhere((e) => e.id == book.id);
 
-  final List<String> recentImages = [
-    'assets/images/app_image5.png',
-    'assets/images/app_image6.png',
-    'assets/images/app_image3.png',
-    'assets/images/app_image4.png',
-  ];
+    // add to top
+    recentlyViewedBooks.insert(0, book);
+
+
+    if (recentlyViewedBooks.length > 10) {
+      recentlyViewedBooks.removeLast();
+    }
+  }
 }
+

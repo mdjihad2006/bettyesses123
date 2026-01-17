@@ -1,4 +1,5 @@
 import 'package:bettyesses123/app/common/images/app_images.dart';
+import 'package:bettyesses123/app/common/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:bettyesses123/app/common/widgets/custom_gradient_button.dart';
 import 'package:bettyesses123/app/common/widgets/custom_outline_button.dart';
 import 'package:bettyesses123/app/routes/app_pages.dart';
@@ -52,23 +53,31 @@ class MenuView extends GetView<MyMenuController> {
                             ),
                             child: data?.image != null
                                 ? Image.network(
-                              getFullImageUrl(data!.image),
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Image.asset(AppImages.profilePic);
-                              },
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    value: loadingProgress.expectedTotalBytes != null
-                                        ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                        : null,
-                                  ),
-                                );
-                              },
-                            )
+                                    getFullImageUrl(data!.image),
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Image.asset(AppImages.profilePic);
+                                    },
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          }
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              value:
+                                                  loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes!
+                                                  : null,
+                                            ),
+                                          );
+                                        },
+                                  )
                                 : Image.asset(AppImages.profilePic),
                           ),
                         ),
@@ -82,7 +91,7 @@ class MenuView extends GetView<MyMenuController> {
                           ),
                         ),
                         Text(
-                          '${data?.email ?? ''}',
+                          data?.email ?? '',
                           style: TextStyle(fontSize: 16, color: Colors.black54),
                         ),
                       ],
@@ -108,12 +117,12 @@ class MenuView extends GetView<MyMenuController> {
                           ),
                           child: data?.image != null
                               ? Image.network(
-                            getFullImageUrl(data!.image),
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.asset(AppImages.profilePic);
-                            },
-                          )
+                                  getFullImageUrl(data!.image),
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Image.asset(AppImages.profilePic);
+                                  },
+                                )
                               : Image.asset(AppImages.profilePic),
                         ),
                       ),
@@ -144,11 +153,11 @@ class MenuView extends GetView<MyMenuController> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       leading: CircleAvatar(
+                        backgroundColor: Colors.grey.withOpacity(0.2),
                         child: Icon(
                           Icons.monetization_on_outlined,
                           color: Colors.black54,
                         ),
-                        backgroundColor: Colors.grey.withOpacity(0.2),
                       ),
                       trailing: Icon(Icons.arrow_forward_ios),
                       title: Text(
@@ -173,11 +182,11 @@ class MenuView extends GetView<MyMenuController> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       leading: CircleAvatar(
+                        backgroundColor: Colors.grey.withOpacity(0.2),
                         child: Icon(
                           Icons.location_on_outlined,
                           color: Colors.black54,
                         ),
-                        backgroundColor: Colors.grey.withOpacity(0.2),
                       ),
                       trailing: Icon(Icons.arrow_forward_ios),
                       title: Text(
@@ -202,8 +211,8 @@ class MenuView extends GetView<MyMenuController> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       leading: CircleAvatar(
-                        child: Icon(Icons.confirmation_num_outlined),
                         backgroundColor: Colors.grey.withOpacity(0.2),
+                        child: Icon(Icons.confirmation_num_outlined),
                       ),
                       trailing: Icon(Icons.arrow_forward_ios),
                       title: Text(
@@ -228,8 +237,8 @@ class MenuView extends GetView<MyMenuController> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       leading: CircleAvatar(
-                        child: Icon(Icons.password),
                         backgroundColor: Colors.grey.withOpacity(0.2),
+                        child: Icon(Icons.password),
                       ),
                       trailing: Icon(Icons.arrow_forward_ios),
                       title: Text(
@@ -257,8 +266,8 @@ class MenuView extends GetView<MyMenuController> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       leading: CircleAvatar(
-                        child: Icon(Icons.help_outline),
                         backgroundColor: Colors.grey.withOpacity(0.2),
+                        child: Icon(Icons.help_outline),
                       ),
                       trailing: Icon(Icons.arrow_forward_ios),
                       title: Text(
@@ -283,8 +292,8 @@ class MenuView extends GetView<MyMenuController> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       leading: CircleAvatar(
-                        child: Icon(Icons.privacy_tip_outlined),
                         backgroundColor: Colors.grey.withOpacity(0.2),
+                        child: Icon(Icons.privacy_tip_outlined),
                       ),
                       trailing: Icon(Icons.arrow_forward_ios),
                       title: Text(
@@ -309,8 +318,8 @@ class MenuView extends GetView<MyMenuController> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       leading: CircleAvatar(
-                        child: Icon(Icons.logout_outlined),
                         backgroundColor: Colors.grey.withOpacity(0.2),
+                        child: Icon(Icons.logout_outlined),
                       ),
                       title: Text(
                         'Logout',
@@ -347,7 +356,8 @@ class MenuView extends GetView<MyMenuController> {
                                 children: [
                                   Expanded(
                                     child: CustomOutlineButton(
-                                      onPressed: () {
+                                      onPressed: () async {
+                                        await SharedPreferencesHelper.logout();
                                         Get.offAllNamed(Routes.LOG_IN);
                                       },
                                       child: Text('Yes'),

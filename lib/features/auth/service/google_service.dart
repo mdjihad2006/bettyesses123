@@ -16,15 +16,13 @@ class AuthService {
 
       // Authenticate
       if (_googleSignIn.supportsAuthenticate()) {
-        final GoogleSignInAccount? user = await _googleSignIn.authenticate();
-        if (user != null) {
-          final auth = await user.authentication;
-          if (auth.idToken != null) {
-            await loginController.loginWithGoogle(auth.idToken!);
-          }
-          return user;
+        final GoogleSignInAccount user = await _googleSignIn.authenticate();
+        final auth = user.authentication;
+        if (auth.idToken != null) {
+          await loginController.loginWithGoogle(auth.idToken!);
         }
-      } else {
+        return user;
+            } else {
         print('Authenticate not supported on this platform.');
       }
     } catch (e) {

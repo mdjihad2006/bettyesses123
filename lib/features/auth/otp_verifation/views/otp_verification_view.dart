@@ -18,7 +18,7 @@ class OtpVerificationView extends GetView<OtpVerificationController> {
     final args = Get.arguments ?? {};
     controller.userId = args['id'] ?? '';
     controller.email = args['email'] ?? '';
-    controller.isFromForgotPassword = args['isFromForgotPassword'] ?? false;
+    controller.isFromForgotPassword = args['isFromForgotPassword'] ?? '';
     print('hello${controller.isFromForgotPassword}');
     print("my id is here${controller.userId}");
 
